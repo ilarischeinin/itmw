@@ -209,13 +209,13 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 200085093;
-			PBXWorkspaceStateSaveDate = 200085093;
+			PBXPerProjectTemplateStateSaveDate = 200088205;
+			PBXWorkspaceStateSaveDate = 200088205;
 		};
 		perUserProjectItems = {
 			61A85B5C0BECEFCE0092F5F7 = 61A85B5C0BECEFCE0092F5F7 /* PBXBookmark */;
 			61A85B5D0BECEFCE0092F5F7 = 61A85B5D0BECEFCE0092F5F7 /* PBXTextBookmark */;
-			61D14EB00BED0E6500411568 /* PBXTextBookmark */ = 61D14EB00BED0E6500411568 /* PBXTextBookmark */;
+			61D14EB00BED0E6500411568 = 61D14EB00BED0E6500411568 /* PBXTextBookmark */;
 		};
 		sourceControlManager = 25D9445A07B1533700FF306F /* Source Control */;
 		userBuildSettings = {
@@ -269,9 +269,9 @@
 	};
 	DA206CF3015C4E8B03C91932 /* iTuneMyWalkman.applescript */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1829, 14910}}";
-			sepNavSelRange = "{46996, 0}";
-			sepNavVisRect = "{{0, 14056}, {1626, 854}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1829, 14970}}";
+			sepNavSelRange = "{47260, 0}";
+			sepNavVisRect = "{{0, 2446}, {1626, 854}}";
 			sepNavWindowFrame = "{{15, 45}, {1665, 983}}";
 		};
 	};
