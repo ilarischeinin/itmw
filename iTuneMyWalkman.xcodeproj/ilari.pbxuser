@@ -95,7 +95,6 @@
 		activeExecutable = 25D9445407B1533600FF306F /* iTuneMyWalkman */;
 		activeTarget = 257572C2072881A4000BE9CA /* iTuneMyWalkman */;
 		addToTargets = (
-			257572C2072881A4000BE9CA /* iTuneMyWalkman */,
 		);
 		breakpoints = (
 		);
@@ -271,7 +270,7 @@
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1829, 14970}}";
 			sepNavSelRange = "{47260, 0}";
-			sepNavVisRect = "{{0, 2446}, {1626, 854}}";
+			sepNavVisRect = "{{0, 0}, {1626, 854}}";
 			sepNavWindowFrame = "{{15, 45}, {1665, 983}}";
 		};
 	};
