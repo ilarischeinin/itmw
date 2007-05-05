@@ -188,6 +188,10 @@ on clicked theObject
 	end if
 end clicked
 
+(*
+This is the laziest ever...
+The only menu item that reaches the script, is the "Preferences..." one. So instead of actually checking that what the chosen menu item was, this just displays the prefs.
+*)
 on choose menu item theObject
 	tell button "prefs" of window "main" to perform action
 end choose menu item
