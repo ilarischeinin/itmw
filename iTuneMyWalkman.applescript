@@ -1,14 +1,16 @@
 -- iTuneMyWalkman.applescript
 -- iTuneMyWalkman
 
+--  Created by Ilari Scheinin on 8.2.2006.
+--  Copyright 2006 Ilari Scheinin. All rights reserved.
+
 property stage : "init"
 property itmwversion : 0.94
 property debugging : false
 
 -- EVENT HANDLERS
 
--- This is called first every time the application starts.
-on launched
+on launched -- this is run every time the application starts
 	global greenball, redball
 	set greenball to load image "green.gif"
 	set redball to load image "red.gif"
@@ -17,25 +19,15 @@ on launched
 	checkforold()
 end launched
 
--- This handler gets called when the application is opened directly and not from the iTunes scripts.
--- These scripts use this syntax to open iTMW: tell application "iTuneMyWalkman" to launch
--- which does not cause this handler to be called. It is called also when the application is already open,
--- and does not have a document window open. In that case, the stage property is checked.
--- If syncing has been started from the iTunes script, the stage is not "init" and therefore the main window
--- should not be shown.
-on should open untitled theObject
+on should open untitled theObject -- this is run only when the application is opened directly and not from a script
 	updateballs()
 	if stage = "init" then show window "main"
 end should open untitled
 
--- Quits the application when the last window is closed
 on should quit after last window closed theObject
-	if stage = "init" or stage = "done" then return true
-	return false
+	return true
 end should quit after last window closed
 
--- If the copying of files where done within a single method, the application would be unresponsive to user interaction during that time.
--- Instead, the stage property is set to copy, and files are copied individually from the idle handler.
 on idle theObject
 	if stage = "copy" then copynext()
 	return 1
@@ -99,7 +91,6 @@ on clicked theObject
 		if name of theObject = "unmount" then
 			tell application "Finder" to eject disk of folder (POSIX file musicpath as string)
 		end if
-		set stage to "done"
 		hide window "done"
 	else if name of window of theObject = "progress" then
 		if name of theObject = "stop" then
@@ -198,7 +189,7 @@ on clicked theObject
 end clicked
 
 on choose menu item theObject
-	if name of theObject = "prefs" then tell button "prefs" of window "main" to perform action
+	tell button "prefs" of window "main" to perform action
 end choose menu item
 
 on change cell value theObject row theRow table column tableColumn value theValue
@@ -310,7 +301,7 @@ on dosync()
 				set convertedtrack to convert alias emptytrack
 				set mybitrate to bit rate of item 1 of convertedtrack
 				delete item 1 of convertedtrack
-				my shellcmd("/bin/rm -f " & quoted form of POSIX path of (location of item 1 of convertedtrack))
+				shellcmd("/bin/rm -f " & quoted form of POSIX path of (location of item 1 of convertedtrack))
 			on error msg
 				tell me to log msg
 			end try
@@ -369,9 +360,9 @@ on movepics(myprocess)
 			set iphoto to "iPhoto"
 			if version of application iphoto < 6 then
 				try
-					tell application "Finder" to tell me to display alert (localized string "iPhoto 6") buttons {localized string "OK"} default button 1
+					tell application "Finder" to tell me to display alert (localized string "iTunes 6") buttons {localized string "OK"} default button 1
 				on error
-					display dialog (localized string "iPhoto 6") buttons {localized string "OK"} default button 1
+					display dialog (localized string "iTunes 6") buttons {localized string "OK"} default button 1
 				end try
 				return
 			end if
@@ -379,7 +370,7 @@ on movepics(myprocess)
 				tell application iphoto
 					import from importlist
 					repeat while importing
-						my shellcmd("/bin/sleep 1")
+						shellcmd("/bin/sleep 1")
 					end repeat
 					set imported to count photos of last rolls album
 				end tell
@@ -513,7 +504,7 @@ on getsongs()
 		else
 			set plists to contents of default entry "chosenPlaylists" of user defaults
 		end if
-		if plists = {} then
+		if plists = {} then -- ei fataali virhe koska voi kŠyttŠŠ pelkkiin podcasteihin
 			try
 				using terms from application "System Events"
 					tell me to display alert (localized string "playlist error") message (localized string "create playlists") buttons {localized string "OK"} default button 1
@@ -657,7 +648,7 @@ end putsongs
 on copynext()
 	global musicpath, pos, mydirlevel, mydirstruct, myincsync, myinccopy, filelist, songlist, targetlist, tracklist, encodelist, total, copied, copiedsize, notcopied
 	if pos > total then
-		set stage to "finishing"
+		set stage to "done"
 		cleanup()
 		return 1
 	end if
@@ -741,33 +732,29 @@ on cleanup()
 	end try
 	if myencoder ­ 1 then tell application "iTunes" to set current encoder to oldenc
 	set duration to (current date) - starttime
+	hide window "progress"
 	set mydone to contents of default entry "synchronizationComplete" of user defaults
-	if mydone = 2 then -- Ask
+	if mydone = 2 then
 		set dialogtext to "Copied " & copied & " tracks (" & copiedsize / 1024 div 1024 & " MB) out of " & total & " tracks (" & totalsize / 1024 div 1024 & " MB)." & return
 		if notcopied ­ 0 then set dialogtext to dialogtext & "NOTE: " & notcopied & " files could not be copied." & return
 		set dialogtext to dialogtext & "Duration: " & duration div 60 & " minutes " & duration mod 60 & " seconds." & return & return & "Do you want to unmount the phone?"
 		set content of text field "copied" of window "done" to dialogtext
-		hide window "progress"
 		activate
 		show window "done"
 		return
-	else
-		set stage to "done"
-	end if
-	if mydone = 3 then -- Beep
+	else if mydone = 3 then
 		beep
-	else if mydone = 4 then -- Spean notification
+	else if mydone = 4 then
 		say "iTuneMyWalkman synchronization complete"
-	else if mydone = 5 then -- Unmount phone
+	else if mydone = 5 then
 		tell application "Finder" to eject disk of folder (POSIX file musicpath as string)
-	else if mydone = 6 then -- Unmount phone & beep
+	else if mydone = 6 then
 		tell application "Finder" to eject disk of folder (POSIX file musicpath as string)
 		beep
-	else if mydone = 7 then -- Unmount phone & speak notification
+	else if mydone = 7 then
 		tell application "Finder" to eject disk of folder (POSIX file musicpath as string)
 		say "iTuneMyWalkman synchronization complete"
 	end if
-	hide window "progress"
 end cleanup
 
 -- HELPER FUNCTIONS
