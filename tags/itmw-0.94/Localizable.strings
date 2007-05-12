@@ -1,0 +1,22 @@
+"phone not found" = "Error: Could not find the phone.";
+"ambiguous path" = "Error: Path is ambiguous.";
+
+"OK" = "OK";
+"Cancel" = "Cancel";
+"Locate..." = "Locate..:";
+"Quit" = "Quit";
+"Proceed" = "Proceed";
+"Delete" = "Delete";
+"Keep Files" = "Keep Files";
+
+"Unknown Artist" = "Unknown Artist";
+"Unknown Album" = "Unknown Album";
+"Unknown Genre" = "Unknown Genre";
+
+"iTunes 6 " = "Sorry, but importing requires iPhoto version 6";
+"picture error" = "iTuneMyWalkman Error: Cannot move camera pictures.";
+"playlist error" = "iTuneMyWalkman Error: Could not find playlists.";
+"create playlists" = "Please create one or more playlists or playlist folders whose names start with \"iTuneMyWalkman\" or \"iTMW\". Their contents will be synchronized to your mobile phone. You can use smart playlists or regular ones.";
+
+"app updated" = "The iTuneMyWalkman application has been updated. To upgrade the installed scripts as well, you should remove and then reinstall them.";
+"old version" = "Detected an old version of iTuneMyWalkman, which needs to be removed. Your preferences will be upgraded, check them after the update.";
