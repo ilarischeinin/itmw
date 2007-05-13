@@ -13,12 +13,12 @@
 			contextName = "";
 			files = (
 				257572C5072881A4000BE9CA /* iTuneMyWalkman.applescript in AppleScript */,
-				61AF9930099A759A008F708A /* iTMW - Check for New Version.scpt in AppleScript */,
-				61AF9931099A759A008F708A /* iTMW - Detect Phone.scpt in AppleScript */,
-				61AF9932099A759A008F708A /* iTMW - Increment Play Count.scpt in AppleScript */,
-				61AF9933099A759A008F708A /* iTMW - Preferences.scpt in AppleScript */,
-				61AF9934099A759A008F708A /* iTMW - Synchronize.scpt in AppleScript */,
-				61AF9935099A759A008F708A /* iTMW - Unmount Phone.scpt in AppleScript */,
+				61AF9930099A759A008F708A /* iTMW - Check for New Version.applescript in AppleScript */,
+				61AF9931099A759A008F708A /* iTMW - Detect Phone.applescript in AppleScript */,
+				61AF9932099A759A008F708A /* iTMW - Increment Play Count.applescript in AppleScript */,
+				61AF9933099A759A008F708A /* iTMW - Preferences.applescript in AppleScript */,
+				61AF9934099A759A008F708A /* iTMW - Synchronize.applescript in AppleScript */,
+				61AF9935099A759A008F708A /* iTMW - Unmount Phone.applescript in AppleScript */,
 			);
 			isSharedContext = 0;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -32,20 +32,18 @@
 		257572CA072881A4000BE9CA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		257572CC072881A4000BE9CA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		257572CD072881A4000BE9CA /* AppleScriptKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA206CF1015C4E2903C91932 /* AppleScriptKit.framework */; };
-		611A0B350A40022900292A8D /* Folder Actions Setup.icns in Resources */ = {isa = PBXBuildFile; fileRef = 611A0B330A40022900292A8D /* Folder Actions Setup.icns */; };
-		611A0B360A40022900292A8D /* iTunes.icns in Resources */ = {isa = PBXBuildFile; fileRef = 611A0B340A40022900292A8D /* iTunes.icns */; };
 		611A0BD00A407E7000292A8D /* green.gif in Resources */ = {isa = PBXBuildFile; fileRef = 611A0BCF0A407E7000292A8D /* green.gif */; };
 		611A0BD50A407F9000292A8D /* red.gif in Resources */ = {isa = PBXBuildFile; fileRef = 611A0BD40A407F9000292A8D /* red.gif */; };
-		61530ED009C2B9510087E434 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 61AF993D099A7672008F708A /* Localizable.strings */; };
 		6161B5310A414C290004C1C8 /* empty.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 6161B5300A414C290004C1C8 /* empty.m4a */; };
-		61AF9930099A759A008F708A /* iTMW - Check for New Version.scpt in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992A099A759A008F708A /* iTMW - Check for New Version.scpt */; settings = {ATTRIBUTES = (Debug, ); }; };
-		61AF9931099A759A008F708A /* iTMW - Detect Phone.scpt in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992B099A759A008F708A /* iTMW - Detect Phone.scpt */; settings = {ATTRIBUTES = (Debug, ); }; };
-		61AF9932099A759A008F708A /* iTMW - Increment Play Count.scpt in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992C099A759A008F708A /* iTMW - Increment Play Count.scpt */; settings = {ATTRIBUTES = (Debug, ); }; };
-		61AF9933099A759A008F708A /* iTMW - Preferences.scpt in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992D099A759A008F708A /* iTMW - Preferences.scpt */; settings = {ATTRIBUTES = (Debug, ); }; };
-		61AF9934099A759A008F708A /* iTMW - Synchronize.scpt in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992E099A759A008F708A /* iTMW - Synchronize.scpt */; settings = {ATTRIBUTES = (Debug, ); }; };
-		61AF9935099A759A008F708A /* iTMW - Unmount Phone.scpt in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992F099A759A008F708A /* iTMW - Unmount Phone.scpt */; settings = {ATTRIBUTES = (Debug, ); }; };
+		61AF9930099A759A008F708A /* iTMW - Check for New Version.applescript in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992A099A759A008F708A /* iTMW - Check for New Version.applescript */; settings = {ATTRIBUTES = (Debug, ); }; };
+		61AF9931099A759A008F708A /* iTMW - Detect Phone.applescript in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992B099A759A008F708A /* iTMW - Detect Phone.applescript */; settings = {ATTRIBUTES = (Debug, ); }; };
+		61AF9932099A759A008F708A /* iTMW - Increment Play Count.applescript in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992C099A759A008F708A /* iTMW - Increment Play Count.applescript */; settings = {ATTRIBUTES = (Debug, ); }; };
+		61AF9933099A759A008F708A /* iTMW - Preferences.applescript in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992D099A759A008F708A /* iTMW - Preferences.applescript */; settings = {ATTRIBUTES = (Debug, ); }; };
+		61AF9934099A759A008F708A /* iTMW - Synchronize.applescript in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992E099A759A008F708A /* iTMW - Synchronize.applescript */; settings = {ATTRIBUTES = (Debug, ); }; };
+		61AF9935099A759A008F708A /* iTMW - Unmount Phone.applescript in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992F099A759A008F708A /* iTMW - Unmount Phone.applescript */; settings = {ATTRIBUTES = (Debug, ); }; };
 		61AF9939099A75BF008F708A /* iTuneMyWalkman.icns in Resources */ = {isa = PBXBuildFile; fileRef = 61AF9938099A75BF008F708A /* iTuneMyWalkman.icns */; };
 		61AFF1D30AFFC14500DF733F /* paypal.gif in Resources */ = {isa = PBXBuildFile; fileRef = 61AFF1D20AFFC14500DF733F /* paypal.gif */; };
+		61EBDFE70BF7230000F1B405 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 61EBDFE60BF7230000F1B405 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,20 +55,18 @@
 		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		611A0B330A40022900292A8D /* Folder Actions Setup.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "Folder Actions Setup.icns"; sourceTree = "<group>"; };
-		611A0B340A40022900292A8D /* iTunes.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = iTunes.icns; sourceTree = "<group>"; };
 		611A0BCF0A407E7000292A8D /* green.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = green.gif; sourceTree = "<group>"; };
 		611A0BD40A407F9000292A8D /* red.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = red.gif; sourceTree = "<group>"; };
 		6161B5300A414C290004C1C8 /* empty.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = empty.m4a; sourceTree = "<group>"; };
 		61966B690BED1BE50089284B /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
-		61AF992A099A759A008F708A /* iTMW - Check for New Version.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; path = "iTMW - Check for New Version.scpt"; sourceTree = "<group>"; };
-		61AF992B099A759A008F708A /* iTMW - Detect Phone.scpt */ = {isa = PBXFileReference; explicitFileType = sourcecode.scpt; fileEncoding = 30; path = "iTMW - Detect Phone.scpt"; sourceTree = "<group>"; };
-		61AF992C099A759A008F708A /* iTMW - Increment Play Count.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; path = "iTMW - Increment Play Count.scpt"; sourceTree = "<group>"; };
-		61AF992D099A759A008F708A /* iTMW - Preferences.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; path = "iTMW - Preferences.scpt"; sourceTree = "<group>"; };
-		61AF992E099A759A008F708A /* iTMW - Synchronize.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; path = "iTMW - Synchronize.scpt"; sourceTree = "<group>"; };
-		61AF992F099A759A008F708A /* iTMW - Unmount Phone.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; path = "iTMW - Unmount Phone.scpt"; sourceTree = "<group>"; };
+		61AF992A099A759A008F708A /* iTMW - Check for New Version.applescript */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.applescript; path = "iTMW - Check for New Version.applescript"; sourceTree = "<group>"; };
+		61AF992B099A759A008F708A /* iTMW - Detect Phone.applescript */ = {isa = PBXFileReference; explicitFileType = sourcecode.scpt; fileEncoding = 30; path = "iTMW - Detect Phone.applescript"; sourceTree = "<group>"; };
+		61AF992C099A759A008F708A /* iTMW - Increment Play Count.applescript */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.applescript; path = "iTMW - Increment Play Count.applescript"; sourceTree = "<group>"; };
+		61AF992D099A759A008F708A /* iTMW - Preferences.applescript */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.applescript; path = "iTMW - Preferences.applescript"; sourceTree = "<group>"; };
+		61AF992E099A759A008F708A /* iTMW - Synchronize.applescript */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.applescript; path = "iTMW - Synchronize.applescript"; sourceTree = "<group>"; };
+		61AF992F099A759A008F708A /* iTMW - Unmount Phone.applescript */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.applescript; path = "iTMW - Unmount Phone.applescript"; sourceTree = "<group>"; };
 		61AF9938099A75BF008F708A /* iTuneMyWalkman.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = iTuneMyWalkman.icns; sourceTree = "<group>"; };
-		61AF993D099A7672008F708A /* Localizable.strings */ = {isa = PBXFileReference; explicitFileType = text.plist.strings; fileEncoding = 4; path = Localizable.strings; sourceTree = "<group>"; };
+		61AF993D099A7672008F708A /* English */ = {isa = PBXFileReference; explicitFileType = text.plist.strings; fileEncoding = 4; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		61AFF1D20AFFC14500DF733F /* paypal.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = paypal.gif; sourceTree = "<group>"; };
 		65359356078DD41800E8BB2F /* AppleScriptKit.sdef */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.sdef; name = AppleScriptKit.sdef; path = /System/Library/Frameworks/AppleScriptKit.framework/Versions/A/Resources/AppleScriptKit.sdef; sourceTree = "<absolute>"; };
 		DA206CF1015C4E2903C91932 /* AppleScriptKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppleScriptKit.framework; path = /System/Library/Frameworks/AppleScriptKit.framework; sourceTree = "<absolute>"; };
@@ -94,13 +90,12 @@
 			isa = PBXGroup;
 			children = (
 				DA206CF3015C4E8B03C91932 /* iTuneMyWalkman.applescript */,
-				61AF992A099A759A008F708A /* iTMW - Check for New Version.scpt */,
-				61AFF1D20AFFC14500DF733F /* paypal.gif */,
-				61AF992B099A759A008F708A /* iTMW - Detect Phone.scpt */,
-				61AF992C099A759A008F708A /* iTMW - Increment Play Count.scpt */,
-				61AF992D099A759A008F708A /* iTMW - Preferences.scpt */,
-				61AF992E099A759A008F708A /* iTMW - Synchronize.scpt */,
-				61AF992F099A759A008F708A /* iTMW - Unmount Phone.scpt */,
+				61AF992A099A759A008F708A /* iTMW - Check for New Version.applescript */,
+				61AF992B099A759A008F708A /* iTMW - Detect Phone.applescript */,
+				61AF992C099A759A008F708A /* iTMW - Increment Play Count.applescript */,
+				61AF992D099A759A008F708A /* iTMW - Preferences.applescript */,
+				61AF992E099A759A008F708A /* iTMW - Synchronize.applescript */,
+				61AF992F099A759A008F708A /* iTMW - Unmount Phone.applescript */,
 			);
 			name = Scripts;
 			sourceTree = "<group>";
@@ -135,7 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				61966B690BED1BE50089284B /* COPYING */,
-				61AF993D099A7672008F708A /* Localizable.strings */,
+				61EBDFE60BF7230000F1B405 /* Localizable.strings */,
 				080E96DDFE201D6D7F000001 /* Scripts */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
@@ -157,9 +152,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				61AFF1D20AFFC14500DF733F /* paypal.gif */,
 				61AF9938099A75BF008F708A /* iTuneMyWalkman.icns */,
-				611A0B330A40022900292A8D /* Folder Actions Setup.icns */,
-				611A0B340A40022900292A8D /* iTunes.icns */,
 				611A0BCF0A407E7000292A8D /* green.gif */,
 				611A0BD40A407F9000292A8D /* red.gif */,
 				6161B5300A414C290004C1C8 /* empty.m4a */,
@@ -242,9 +236,7 @@
 				257572C7072881A4000BE9CA /* MainMenu.nib in Resources */,
 				257572C8072881A4000BE9CA /* InfoPlist.strings in Resources */,
 				61AF9939099A75BF008F708A /* iTuneMyWalkman.icns in Resources */,
-				61530ED009C2B9510087E434 /* Localizable.strings in Resources */,
-				611A0B350A40022900292A8D /* Folder Actions Setup.icns in Resources */,
-				611A0B360A40022900292A8D /* iTunes.icns in Resources */,
+				61EBDFE70BF7230000F1B405 /* Localizable.strings in Resources */,
 				611A0BD00A407E7000292A8D /* green.gif in Resources */,
 				611A0BD50A407F9000292A8D /* red.gif in Resources */,
 				6161B5310A414C290004C1C8 /* empty.m4a in Resources */,
@@ -280,6 +272,14 @@
 				29B97319FDCFA39411CA2CEA /* English */,
 			);
 			name = MainMenu.nib;
+			sourceTree = "<group>";
+		};
+		61EBDFE60BF7230000F1B405 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				61AF993D099A7672008F708A /* English */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

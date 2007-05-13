@@ -1,6 +1,40 @@
 -- iTuneMyWalkman.applescript
 -- iTuneMyWalkman
 
+(*
+List of handlers in this script
+
+-- EVENT HANDLERS
+on launched
+on should open untitled theObject
+on should quit after last window closed theObject
+on idle theObject
+on clicked theObject
+on choose menu item theObject
+on change cell value theObject row theRow table column tableColumn value theValue
+on selection changed theObject
+-- OWN SUBROUTINES
+on startsync()																			
+on dosync()
+on movepics(myprocess)
+on getsongs()
+on deleteolds()
+on putsongs()
+on copynext()
+on cleanup()
+-- HELPER FUNCTIONS
+on getpath(path)
+on strip(txt)
+on shellcmd(cmd)
+on whattodo(filetype, bitrate)
+on updateballs()
+on scriptsinstalled()
+on fainstalled()
+on showprefs()
+on initprefs()
+on checkforold()
+*)
+
 property stage : "init"
 property itmwversion : 0.94
 property debugging : false
@@ -9,9 +43,20 @@ property debugging : false
 
 -- This is called first every time the application starts.
 on launched
-	global greenball, redball
-	set greenball to load image "green.gif"
-	set redball to load image "red.gif"
+	considering numeric strings
+		using terms from application "System Events"
+			if system version of (system info) < "10.4" then
+				display alert (localized string "Mac OS X 10.4") buttons {localized string "Quit"} default button 1
+				quit
+			end if
+			tell application "Finder" to set hasitunes to exists application file id "com.apple.iTunes"
+			if hasitunes then tell application "Finder" to set itunes to name of application file id "com.apple.iTunes"
+			if not hasitunes or version of application itunes as text < "7" then
+				display alert (localized string "iTunes 7") buttons {localized string "Quit"} default button 1
+				quit
+			end if
+		end using terms from
+	end considering
 	initprefs()
 	set debugging to contents of default entry "debugging" of user defaults
 	checkforold()
@@ -25,7 +70,15 @@ end launched
 -- should not be shown.
 on should open untitled theObject
 	updateballs()
-	if stage = "init" then show window "main"
+	if stage = "init" then
+		try
+			tell application "Finder" to set itunesicon to POSIX path of ((application file id "com.apple.iTunes" as string) & ":Contents:Resources:iTunes.icns")
+			tell application "Finder" to set fasicon to POSIX path of ((application file id "com.apple.FolderActionsSetup" as string) & ":Contents:Resources:Folder Actions Setup.icns")
+			set image of image view "itunes" of window "main" to load image itunesicon
+			set image of image view "fas" of window "main" to load image fasicon
+		end try
+		show window "main"
+	end if
 end should open untitled
 
 -- Quits the application when the last window is closed
@@ -79,10 +132,6 @@ on clicked theObject
 			set fadir to path to Folder Action scripts from user domain as string with folder creation
 			shellcmd("/bin/rm -f " & quoted form of POSIX path of (fadir & "iTMW - Detect Phone.scpt"))
 			updateballs()
-		end if
-	else if name of window of theObject = "error" then
-		if name of theObject = "ok" then
-			hide window "error"
 		end if
 	else if name of window of theObject = "confirmation" then
 		if name of theObject = "continue" then
@@ -239,24 +288,16 @@ on startsync()
 	repeat
 		set musicpath to getpath(mymusicpath)
 		if musicpath = "notfound" then
-			try
-				using terms from application "System Events"
-					set relocate to display alert (localized string "phone not found") message mymusicpath buttons {localized string "Cancel", localized string "Locate..."} default button 2
-				end using terms from
-			on error
-				set relocate to display dialog (localized string "phone not found") & return & mymusicpath buttons {localized string "Cancel", localized string "Locate..."} default button 2
-			end try
+			using terms from application "System Events"
+				set relocate to display alert (localized string "phone not found") message mymusicpath buttons {localized string "Cancel", localized string "Locate..."} default button 2
+			end using terms from
 			if button returned of relocate = (localized string "Cancel") then return
 			set mymusicpath to quoted form of POSIX path of (choose folder "Choose the music folder of the phone:")
 			set contents of default entry "musicPath" of user defaults of me to mymusicpath
 		else if musicpath = "ambiguous" then
-			try
-				using terms from application "System Events"
-					display alert (localized string "ambiguous path") message mymusicpath buttons {localized string "OK"} default button 1
-				end using terms from
-			on error
-				display dialog (localized string "ambiguous path") & return & mymusicpath buttons {localized string "OK"} default button 1
-			end try
+			using terms from application "System Events"
+				display alert (localized string "ambiguous path") message mymusicpath buttons {localized string "OK"} default button 1
+			end using terms from
 			return
 		else
 			exit repeat
@@ -364,39 +405,37 @@ on movepics(myprocess)
 	end if
 	if fils = {} then return
 	if myprocess = 3 then -- iPhoto
-		tell application "Finder" to set iphotoexists to exists application file id "iPho"
-		if iphotoexists then
-			set iphoto to "iPhoto"
-			if version of application iphoto < 6 then
-				try
-					tell application "Finder" to tell me to display alert (localized string "iPhoto 6") buttons {localized string "OK"} default button 1
-				on error
-					display dialog (localized string "iPhoto 6") buttons {localized string "OK"} default button 1
-				end try
+		tell application "Finder" to set hasiphoto to exists application file id "com.apple.iPhoto"
+		if hasiphoto then tell application "Finder" to set iphoto to name of application file id "com.apple.iPhoto"
+		considering numeric strings
+			if not hasiphoto or version of application iphoto < "6" then
+				using terms from application "System Events"
+					display alert (localized string "iPhoto 6") buttons {localized string "OK"} default button 1
+				end using terms from
 				return
 			end if
-			using terms from application "iPhoto"
-				tell application iphoto
-					import from importlist
-					repeat while importing
-						my shellcmd("/bin/sleep 1")
-					end repeat
-					set imported to count photos of last rolls album
-				end tell
-			end using terms from
-			set num to count importlist
-			if imported ­ num then
-				set sure to display dialog "iTuneMyWalkman tried to import " & num & " items to iPhoto, but your last rolls album contains " & imported & " pictures. Should iTuneMyWalkman delete the files from the memory stick or not?" buttons {localized string "Delete", localized string "Keep Files"}
-				if button returned of sure = (localized string "Keep Files") then return
-			end if
-			repeat with x in fils
-				if s60thumbs then
-					shellcmd("/bin/rm -rf " & quoted form of x & "*")
-				else
-					shellcmd("/bin/rm -rf " & quoted form of x)
-				end if
-			end repeat
+		end considering
+		using terms from application "iPhoto"
+			tell application iphoto
+				import from importlist
+				repeat while importing
+					my shellcmd("/bin/sleep 1")
+				end repeat
+				set imported to count photos of last rolls album
+			end tell
+		end using terms from
+		set num to count importlist
+		if imported ­ num then
+			set sure to display dialog "iTuneMyWalkman tried to import " & num & " items to iPhoto, but your last rolls album contains " & imported & " pictures. Should iTuneMyWalkman delete the files from the memory stick or not?" buttons {localized string "Delete", localized string "Keep Files"}
+			if button returned of sure = (localized string "Keep Files") then return
 		end if
+		repeat with x in fils
+			if s60thumbs then
+				shellcmd("/bin/rm -rf " & quoted form of x & "*")
+			else
+				shellcmd("/bin/rm -rf " & quoted form of x)
+			end if
+		end repeat
 	else
 		set mymovepath to contents of default entry "moveImagesTo" of user defaults
 		if mymovepath ­ "notfound" and mymovepath ­ "ambiguous" then
@@ -412,11 +451,9 @@ on movepics(myprocess)
 						shellcmd("/bin/rm " & quoted form of x)
 					end if
 				on error msg
-					try
-						tell application "Finder" to tell me to display alert (localized string "picture error") message msg buttons {localized string "OK"} default button 1 -- 10.4
-					on error
-						tell me to display dialog (localized string "picture error") & return & msg buttons {localized string "OK"} default button 1 -- 10.3
-					end try
+					using terms from application "System Events"
+						display alert (localized string "picture error") message msg buttons {localized string "OK"} default button 1
+					end using terms from
 				end try
 			end repeat
 		end if
@@ -514,15 +551,9 @@ on getsongs()
 			set plists to contents of default entry "chosenPlaylists" of user defaults
 		end if
 		if plists = {} then
-			try
-				using terms from application "System Events"
-					tell me to display alert (localized string "playlist error") message (localized string "create playlists") buttons {localized string "OK"} default button 1
-				end using terms from
-			on error
-				set content of text field "text1" of window "error" to localized string "playlist error"
-				set content of text field "text2" of window "error" to localized string "create playlists"
-				show window "error"
-			end try
+			using terms from application "System Events"
+				display alert (localized string "playlist error") message (localized string "create playlists") buttons {localized string "OK"} default button 1
+			end using terms from
 		end if
 		repeat with i from 1 to count plists
 			repeat with j from 2 to (count plists) - i + 1
@@ -797,12 +828,6 @@ on shellcmd(cmd)
 	return do shell script cmd
 end shellcmd
 
-on unicodetoplain(str)
-	set styledtext to str as string
-	set styledrecord to styledtext as record
-	return Çclass ktxtÈ of styledrecord
-end unicodetoplain
-
 on whattodo(filetype, bitrate)
 	global myencoder, myfiletypelimits
 	repeat with x in myfiletypelimits
@@ -818,7 +843,8 @@ on whattodo(filetype, bitrate)
 end whattodo
 
 on updateballs()
-	global greenball, redball
+	set greenball to load image "green.gif"
+	set redball to load image "red.gif"
 	if scriptsinstalled() then
 		set image of image view "scriptson" of window "main" to greenball
 	else

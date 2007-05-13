@@ -13,7 +13,9 @@
 "Unknown Album" = "Unknown Album";
 "Unknown Genre" = "Unknown Genre";
 
-"iTunes 6 " = "Sorry, but importing requires iPhoto version 6";
+"Mac OS X 10.4" = "iTuneMyWalkman requires Mac OS X 10.4 or later.";
+"iTunes 7" = "iTuneMyWalkman requires iTunes 7 or later.";
+"iPhoto 6" = "Sorry, but importing requires iPhoto version 6 or later.";
 "picture error" = "iTuneMyWalkman Error: Cannot move camera pictures.";
 "playlist error" = "iTuneMyWalkman Error: Could not find playlists.";
 "create playlists" = "Please create one or more playlists or playlist folders whose names start with \"iTuneMyWalkman\" or \"iTMW\". Their contents will be synchronized to your mobile phone. You can use smart playlists or regular ones.";
