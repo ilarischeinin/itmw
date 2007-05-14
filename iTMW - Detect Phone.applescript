@@ -38,12 +38,15 @@ on adding folder items to this_folder after receiving added_items
 	end tell
 end adding folder items to
 
+-- This method is used to hide the tell block from Xcode during compile time.
+-- Otherwise the compiling would fail, if the application is not found.
 on openapp()
-	tell application "iTuneMyWalkman"
-		launch
-		activate
-		ignoring application responses
-			tell button "sync" of window "main" to perform action
-		end ignoring
-	end tell
+	do shell script "/usr/bin/osascript -e \\
+		'tell application \"iTuneMyWalkman\"
+			launch
+			activate
+			ignoring application responses
+				tell button \"sync\" of window \"main\" to perform action
+			end	ignoring
+		end tell'"
 end openapp

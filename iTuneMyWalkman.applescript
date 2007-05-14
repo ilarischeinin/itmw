@@ -42,34 +42,31 @@ property debugging : false
 
 -- This is called first every time the application starts.
 on launched
-	considering numeric strings
-		using terms from application "System Events"
-			if system version of (system info) < "10.4" then
-				display alert (localized string "Mac OS X 10.4") buttons {localized string "Quit"} default button 1
-				quit
-			end if
-			tell application "Finder" to set hasitunes to exists application file id "com.apple.iTunes"
-			if hasitunes then tell application "Finder" to set itunes to name of application file id "com.apple.iTunes"
-			if not hasitunes or version of application itunes as text < "7" then
-				display alert (localized string "iTunes 7") buttons {localized string "Quit"} default button 1
-				quit
-			end if
-		end using terms from
-	end considering
 	initprefs()
 	set debugging to contents of default entry "debugging" of user defaults
 	checkforold()
 end launched
 
--- This handler gets called when the application is opened directly and not from the iTunes scripts.
--- These scripts use this syntax to open iTMW: tell application "iTuneMyWalkman" to launch
--- which does not cause this handler to be called. It is called also when the application is already open,
--- and does not have a document window open. In that case, the stage property is checked.
--- If syncing has been started from the iTunes script, the stage is not "init" and therefore the main window
--- should not be shown.
+-- This handler checks whether iTuneMyWalkman is the frontmost application.
+-- If yes, the main window is shown as the user probably opened the application directly.
+-- If not, the call probably came from the iTunes script, so the main window should not be shown.
 on should open untitled theObject
-	updateballs()
-	if stage = "init" then
+	if name of (info for (path to frontmost application)) = name of me & ".app" then
+		considering numeric strings
+			using terms from application "System Events"
+				if system version of (system info) < "10.4" then
+					display alert (localized string "Mac OS X 10.4") buttons {localized string "Quit"} default button 1
+					quit
+				end if
+				tell application "Finder" to set hasitunes to exists application file id "com.apple.iTunes"
+				if hasitunes then tell application "Finder" to set itunes to name of application file id "com.apple.iTunes"
+				if not hasitunes or version of application itunes as text < "7" then
+					display alert (localized string "iTunes 7") buttons {localized string "Quit"} default button 1
+					quit
+				end if
+			end using terms from
+		end considering
+		updateballs()
 		try
 			tell application "Finder" to set itunesicon to POSIX path of ((application file id "com.apple.iTunes" as string) & ":Contents:Resources:iTunes.icns")
 			tell application "Finder" to set fasicon to POSIX path of ((application file id "com.apple.FolderActionsSetup" as string) & ":Contents:Resources:Folder Actions Setup.icns")
@@ -272,6 +269,8 @@ on startsync()
 		if musicpath = "notfound" then
 			using terms from application "System Events"
 				set relocate to display alert (localized string "phone not found") message mymusicpath buttons {localized string "Cancel", localized string "Locate..."} default button 2
+				set stage to "done"
+				return
 			end using terms from
 			if button returned of relocate = (localized string "Cancel") then return
 			set mymusicpath to quoted form of POSIX path of (choose folder "Choose the music folder of the phone:")
@@ -950,7 +949,7 @@ end initprefs
 on checkforold()
 	set lastversion to contents of default entry "itmwVersion" of user defaults
 	considering numeric strings
-		if lastversion < itmwversion then
+		if lastversion as text < itmwversion then
 			if scriptsinstalled() then tell button "installscripts" of window "main" to perform action
 			if fainstalled() then tell button "installfa" of window "main" to perform action
 			set contents of default entry "itmwVersion" of user defaults to itmwversion
@@ -991,7 +990,7 @@ on checkforold()
 		set prefs to load script file oldprefs
 		set contents of default entry "musicPath" of user defaults to musicpath of prefs
 		set contents of default entry "phoneDetected" of user defaults to phonedetected of prefs
-		if startsync of prefs = 2 then set contents of default entry "askForConfirmation" to false -- ###
+		if startsync of prefs = 2 then set contents of default entry "askForConfirmation" to false
 		set contents of default entry "synchronizationComplete" of user defaults to endsync of prefs
 		set contents of default entry "sizeLimit" of user defaults to sizelimit of prefs
 		set contents of default entry "directoryStructure" of user defaults to directorystructure of prefs

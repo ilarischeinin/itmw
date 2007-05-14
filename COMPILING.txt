@@ -1,8 +1,5 @@
 Compiling iTuneMyWalkman
 
-1. To compile iTuneMyWalkman you need to have the following (or later) versions:
-Mac OS X 10.4, iTunes 7, iPhoto 6
-
-2. Because the iTunes scripts contain tell application "iTuneMyWalkman" blocks,
-compiling fails if it cannot find the iTuneMyWalkman application. So, you may
-need to download the built application separately in order to be able to compile.
+To compile iTuneMyWalkman you need to have the following (or later) versions:
+Mac OS X 10.4, iTunes 7, iPhoto 6. I once compiled on a system with iPhoto 5, which
+did not give any errors, but resulted in a non-functional build.
