@@ -1,0 +1,34 @@
+"phone not found" = "Error: Could not find the phone.";
+"ambiguous path" = "Error: Path is ambiguous.";
+"confirmation" = "iTuneMyWalkman will upload the contents of the selected iTunes playlists to the following folder. All files within that folder will be deleted. Are you sure you want to continue?";
+"confirmation2" = "This warning can be disabled from the preferences.";
+"complete" = "iTuneMyWalkman has completed the synchronization.";
+
+"OK" = "OK";
+"Cancel" = "Cancel";
+"Locate..." = "Locate...";
+"Quit" = "Quit";
+"Continue" = "Continue";
+"Delete" = "Delete";
+"Keep Files" = "Keep Files";
+"Unmount" = "Unmount";
+"Don't Unmount" = "Don't Unmount";
+"Copied" = "Copied";
+"tracks" = "tracks";
+"MB" = "MB";
+"Warning" = "Warning";
+"files could not be copied." = "files could not be copied.";
+
+"Unknown Artist" = "Unknown Artist";
+"Unknown Album" = "Unknown Album";
+"Unknown Genre" = "Unknown Genre";
+
+"Mac OS X 10.4" = "iTuneMyWalkman requires Mac OS X 10.4 or later.";
+"iTunes 7" = "iTuneMyWalkman requires iTunes 7 or later.";
+"iPhoto 6" = "Sorry, but importing requires iPhoto version 6 or later.";
+"picture error" = "iTuneMyWalkman Error: Cannot move camera pictures.";
+"playlist error" = "iTuneMyWalkman Error: Could not find playlists.";
+"create playlists" = "Please create one or more playlists or playlist folders whose names start with \"iTuneMyWalkman\" or \"iTMW\". Their contents will be synchronized to your mobile phone. You can use smart playlists or regular ones.";
+
+"app updated" = "The iTuneMyWalkman application has been updated. To upgrade the installed scripts as well, you should remove and then reinstall them.";
+"old version" = "Detected an old version of iTuneMyWalkman, which needs to be removed. Your preferences will be upgraded, check them after the update.";
