@@ -1,13 +1,23 @@
 "phone not found" = "Error: Could not find the phone.";
 "ambiguous path" = "Error: Path is ambiguous.";
+"confirmation" = "iTuneMyWalkman will upload the contents of the selected iTunes playlists to the following folder. All files within that folder will be deleted. Are you sure you want to continue?";
+"confirmation2" = "This warning can be disabled from the preferences.";
+"complete" = "iTuneMyWalkman has completed the synchronization.";
 
 "OK" = "OK";
 "Cancel" = "Cancel";
 "Locate..." = "Locate..:";
 "Quit" = "Quit";
-"Proceed" = "Proceed";
+"Continue" = "Continue";
 "Delete" = "Delete";
 "Keep Files" = "Keep Files";
+"Unmount" = "Unmount";
+"Don't Unmount" = "Don't Unmount";
+"Copied" = "Copied";
+"tracks" = "tracks";
+"MB" = "MB";
+"Warning" = "Warning";
+"files could not be copied." = "files could not be copied.";
 
 "Unknown Artist" = "Unknown Artist";
 "Unknown Album" = "Unknown Album";

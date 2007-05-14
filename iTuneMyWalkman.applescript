@@ -15,7 +15,6 @@ on change cell value theObject row theRow table column tableColumn value theValu
 on selection changed theObject
 -- OWN SUBROUTINES
 on startsync()																			
-on dosync()
 on movepics(myprocess)
 on getsongs()
 on deleteolds()
@@ -36,7 +35,7 @@ on checkforold()
 *)
 
 property stage : "init"
-property itmwversion : 0.94
+property itmwversion : "0.941"
 property debugging : false
 
 -- EVENT HANDLERS
@@ -133,23 +132,6 @@ on clicked theObject
 			shellcmd("/bin/rm -f " & quoted form of POSIX path of (fadir & "iTMW - Detect Phone.scpt"))
 			updateballs()
 		end if
-	else if name of window of theObject = "confirmation" then
-		if name of theObject = "continue" then
-			hide window "confirmation"
-			dosync()
-		else if name of theObject = "dontshow" then
-			hide window "confirmation"
-			set contents of default entry "askForConfirmation" of user defaults to false -- ###
-			dosync()
-		else if name of theObject = "cancel" then
-			hide window "confirmation"
-		end if
-	else if name of window of theObject = "done" then
-		if name of theObject = "unmount" then
-			tell application "Finder" to eject disk of folder (POSIX file musicpath as string)
-		end if
-		set stage to "done"
-		hide window "done"
 	else if name of window of theObject = "progress" then
 		if name of theObject = "stop" then
 			set stage to "stop"
@@ -304,16 +286,11 @@ on startsync()
 		end if
 	end repeat
 	if (contents of default entry "askForConfirmation" of user defaults) then
-		set content of text field "location" of window "confirmation" to musicpath
-		show window "confirmation"
-	else
-		dosync()
+		using terms from application "System Events"
+			set confirmation to button returned of (display alert (localized string "confirmation") message musicpath & return & return & (localized string "confirmation2") buttons {localized string "Cancel", localized string "Continue"} default button 1)
+		end using terms from
+		if confirmation = (localized string "Cancel") then return
 	end if
-	if debugging then log "startsync ends"
-end startsync
-
-on dosync()
-	if debugging then log "dosync begins"
 	global starttime, myencoder, oldenc, mybitrate, mysuffix, mydirlevel, mydirstruct, myincsync, myinccopy, myfiletypelimits, copied, copiedsize, notcopied, total
 	set starttime to current date
 	tell window "progress"
@@ -364,8 +341,9 @@ on dosync()
 	getsongs()
 	deleteolds()
 	putsongs()
-	if debugging then log "dosync ends"
-end dosync
+	if debugging then log "startsync ends"
+end startsync
+
 
 on movepics(myprocess)
 	if debugging then log "movepics begins"
@@ -774,16 +752,14 @@ on cleanup()
 	set duration to (current date) - starttime
 	set mydone to contents of default entry "synchronizationComplete" of user defaults
 	if mydone = 2 then -- Ask
-		set dialogtext to "Copied " & copied & " tracks (" & copiedsize / 1024 div 1024 & " MB) out of " & total & " tracks (" & totalsize / 1024 div 1024 & " MB)." & return
-		if notcopied ­ 0 then set dialogtext to dialogtext & "NOTE: " & notcopied & " files could not be copied." & return
-		set dialogtext to dialogtext & "Duration: " & duration div 60 & " minutes " & duration mod 60 & " seconds." & return & return & "Do you want to unmount the phone?"
-		set content of text field "copied" of window "done" to dialogtext
-		hide window "progress"
-		activate
-		show window "done"
-		return
-	else
-		set stage to "done"
+		using terms from application "System Events"
+			set themessage to localized string "Copied" & " " & copied & " / " & total & " " & (localized string "tracks" & " (" & (copiedsize * 10 / 1024 div 1024 / 10) & " " & (localized string "MB" & " / " & (totalsize * 10 / 1024 div 1024 / 10) & " " & (localized string "MB" & ")")))
+			if notcopied ­ 0 then set themessage to themessage & return & (localized string "Warning" & ": " & notcopied & " " & (localized string "files could not be copied."))
+			set unmount to button returned of (display alert (localized string "complete") message themessage buttons {localized string "Don't Unmount", localized string "Unmount"})
+			if unmount = (localized string "Unmount") then
+				tell application "Finder" to eject disk of folder (POSIX file musicpath as string)
+			end if
+		end using terms from
 	end if
 	if mydone = 3 then -- Beep
 		beep
@@ -798,6 +774,7 @@ on cleanup()
 		tell application "Finder" to eject disk of folder (POSIX file musicpath as string)
 		say "iTuneMyWalkman synchronization complete"
 	end if
+	set stage to "done"
 	hide window "progress"
 end cleanup
 
@@ -945,7 +922,7 @@ on initprefs()
 		make new default entry at end of default entries with properties {name:"musicPath", contents:"/Volumes/*/MSSEMC/Media\\ files/audio/"}
 		make new default entry at end of default entries with properties {name:"videoPath", contents:"/Volumes/*/MSSEMC/Media\\ files/video/"}
 		make new default entry at end of default entries with properties {name:"phoneDetected", contents:2}
-		make new default entry at end of default entries with properties {name:"askForConfirmation", contents:true} -- ###
+		make new default entry at end of default entries with properties {name:"askForConfirmation", contents:true}
 		make new default entry at end of default entries with properties {name:"syncMusic", contents:true}
 		make new default entry at end of default entries with properties {name:"syncPodcasts", contents:true}
 		make new default entry at end of default entries with properties {name:"synchronizationComplete", contents:2}
@@ -972,11 +949,13 @@ end initprefs
 
 on checkforold()
 	set lastversion to contents of default entry "itmwVersion" of user defaults
-	if lastversion is not itmwversion then
-		if scriptsinstalled() then tell button "installscripts" of window "main" to perform action
-		if fainstalled() then tell button "installfa" of window "main" to perform action
-		set contents of default entry "itmwVersion" of user defaults to itmwversion
-	end if
+	considering numeric strings
+		if lastversion < itmwversion then
+			if scriptsinstalled() then tell button "installscripts" of window "main" to perform action
+			if fainstalled() then tell button "installfa" of window "main" to perform action
+			set contents of default entry "itmwVersion" of user defaults to itmwversion
+		end if
+	end considering
 	set oldprefs to (path to preferences folder from user domain as string) & "iTuneMyWalkman.scpt"
 	set wasfound to true
 	try
@@ -985,7 +964,7 @@ on checkforold()
 		set wasfound to false
 	end try
 	if not wasfound then return
-	set sure to display dialog (localized string "old version") buttons {localized string "Quit", localized string "Proceed"} default button 2 with icon 2
+	set sure to display dialog (localized string "old version") buttons {localized string "Quit", localized string "Continue"} default button 2 with icon 2
 	if button returned of sure = (localized string "Quit") then
 		tell me to close window "main"
 		return
