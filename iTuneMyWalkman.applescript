@@ -170,6 +170,7 @@ on clicked theObject
 					set contents of default entry "musicPath" of user defaults of me to contents of text field "musicpath" of box "music"
 					set contents of default entry "phoneDetected" of user defaults of me to tag of current menu item of popup button "phonedetected"
 					set contents of default entry "askForConfirmation" of user defaults of me to content of button "confirmation"
+					set contents of default entry "SUCheckAtStartup" of user defaults of me to content of button "updates"
 					set contents of default entry "synchronizationComplete" of user defaults of me to tag of current menu item of popup button "endsync"
 					set contents of default entry "sizeLimit" of user defaults of me to (contents of text field "sizelimit" as number) * 1024 * 1024
 				end tell
@@ -837,7 +838,6 @@ end updateballs
 on scriptsinstalled()
 	set scriptdir to POSIX path of ((path to library folder from user domain as string) & "iTunes:Scripts:")
 	try
-		shellcmd("/bin/test -f " & quoted form of (scriptdir & "iTMW - Check for New Version.scpt"))
 		shellcmd("/bin/test -f " & quoted form of (scriptdir & "iTMW - Increment Play Count.scpt"))
 		shellcmd("/bin/test -f " & quoted form of (scriptdir & "iTMW - Preferences.scpt"))
 		shellcmd("/bin/test -f " & quoted form of (scriptdir & "iTMW - Synchronize.scpt"))
@@ -864,6 +864,7 @@ on showprefs()
 			set contents of text field "musicpath" of box "music" to (contents of default entry "musicPath" of user defaults of me)
 			set current menu item of popup button "phonedetected" to menu item (contents of default entry "phoneDetected" of user defaults of me) of popup button "phonedetected"
 			set content of button "confirmation" to contents of default entry "askForConfirmation" of user defaults of me
+			set content of button "updates" to contents of default entry "SUCheckAtStartup" of user defaults of me
 			set current menu item of popup button "endsync" to menu item (contents of default entry "synchronizationComplete" of user defaults of me) of popup button "endsync"
 			set contents of text field "sizelimit" to (contents of default entry "sizeLimit" of user defaults of me) / 1024 div 1024
 		end tell
