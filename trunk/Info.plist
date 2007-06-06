@@ -16,8 +16,6 @@
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>1.4</string>
 	<key>CFBundleSignature</key>
 	<string>iTMW</string>
 	<key>CFBundleVersion</key>
@@ -28,5 +26,7 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>SUFeedURL</key>
+	<string>http://ilari.scheinin.fidisk.fi/itunemywalkman/appcast.xml</string>
 </dict>
 </plist>
