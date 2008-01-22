@@ -270,11 +270,12 @@ on startsync()
 		if musicpath = "notfound" then
 			using terms from application "System Events"
 				set relocate to display alert (localized string "phone not found") message mymusicpath buttons {localized string "Cancel", localized string "Locate..."} default button 2
+			end using terms from
+			if button returned of relocate = (localized string "Cancel") then
 				set stage to "done"
 				return
-			end using terms from
-			if button returned of relocate = (localized string "Cancel") then return
-			set mymusicpath to quoted form of POSIX path of (choose folder "Choose the music folder of the phone:")
+			end if
+			set mymusicpath to quoted form of POSIX path of (choose folder (localized string "Choose the music folder of the phone:"))
 			set contents of default entry "musicPath" of user defaults of me to mymusicpath
 		else if musicpath = "ambiguous" then
 			using terms from application "System Events"
@@ -461,10 +462,13 @@ on getsongs()
 	set syncmusic to contents of default entry "syncMusic" of user defaults
 	set syncpodcasts to contents of default entry "syncPodcasts" of user defaults
 	set whichlists to contents of default entry "whichPlaylists" of user defaults
+	set writem3u to contents of default entry "writeM3UPlaylists" of user defaults
 	if syncpodcasts then
 		tell application "iTunes"
 			set plists to every playlist whose special kind = Podcasts
 			repeat with plist in plists
+				set playlistname to name of user playlist plist
+				set m3u to ""
 				repeat with x in (every file track of plist whose enabled = true)
 					set songfile to location of x
 					if songfile ­ missing value and songfile is not in filelist then
@@ -494,6 +498,7 @@ on getsongs()
 								set encodelist to encodelist & {encoded}
 								if mydirlevel = 2 then
 									set targetlist to targetlist & {musicpath & "/Podcasts/Podcasts/" & songname}
+									set m3u to m3u & "Podcasts\\Podcasts\\" & songname & return
 									set tmp to musicpath & "/Podcasts/Podcasts"
 									if tmp is not in dirlist then set dirlist to dirlist & {tmp}
 									set tmp to musicpath & "/Podcasts"
@@ -509,6 +514,13 @@ on getsongs()
 						end if
 					end if
 				end repeat
+				if writem3u then
+					tell me
+						set fp to open for access (POSIX file (musicpath & playlistname & ".m3u")) with write permission
+						write m3u to fp
+						close access fp
+					end tell
+				end if
 			end repeat
 		end tell
 	end if
@@ -545,6 +557,8 @@ on getsongs()
 		tell application "iTunes"
 			repeat with plist in plists
 				if exists user playlist plist then
+					set playlistname to name of user playlist plist
+					set m3u to ""
 					repeat with x in (every file track of user playlist plist whose enabled = true)
 						set songfile to location of x
 						if songfile ­ missing value and songfile is not in filelist then
@@ -590,21 +604,32 @@ on getsongs()
 									end if
 									if mydirlevel = 2 then -- two levels of folders
 										set targetlist to targetlist & {musicpath & "/" & artistname & "/" & albumname & "/" & songname}
+										set m3u to m3u & artistname & "\\" & albumname & "\\" & songname & return
 										set tmp to musicpath & "/" & artistname
 										if tmp is not in dirlist then set dirlist to dirlist & {tmp}
 										set tmp to musicpath & "/" & artistname & "/" & albumname
 										if tmp is not in dirlist then set dirlist to dirlist & {tmp}
 									else if mydirlevel = 1 then -- one folder level
 										set targetlist to targetlist & {musicpath & "/" & albumname & "/" & songname}
+										set m3u to m3u & albumname & "\\" & songname & return
 										set tmp to musicpath & "/" & albumname
 										if tmp is not in dirlist then set dirlist to dirlist & {tmp}
 									else -- no folders
 										set targetlist to targetlist & {musicpath & "/" & songname}
+										set m3u to m3u & songname & return
 									end if
 								end if
 							end if
 						end if
 					end repeat
+					if writem3u then
+						tell me
+							set fp to open for access (POSIX file (musicpath & playlistname & ".m3u")) with write permission
+							set eof fp to 0
+							write m3u to fp
+							close access fp
+						end tell
+					end if
 				end if
 			end repeat
 		end tell
@@ -632,7 +657,7 @@ on deleteolds()
 			if debugging then log "deleting unneeded directory: " & x
 		end if
 	end repeat
-	set fils to shellcmd("/usr/bin/find " & quoted form of musicpath & " -type f" & excludestring)
+	set fils to shellcmd("/usr/bin/find " & quoted form of musicpath & " -type f -not -iname \"*.m3u\"" & excludestring)
 	repeat with x in every paragraph of fils
 		if x as string = "" then exit repeat
 		if x is not in targetlist then
@@ -676,7 +701,7 @@ on copynext()
 	end tell
 	set wasfound to true
 	try
-		shellcmd("/bin/test -f " & quoted form of (characters 1 thru -4 of (item pos of targetlist) as string) & "*")
+		shellcmd("/bin/test -f " & quoted form of (characters 1 thru -4 of (item pos of targetlist) as Unicode text) & "*")
 	on error
 		set wasfound to false
 	end try
@@ -860,7 +885,7 @@ end fainstalled
 
 on showprefs()
 	tell tab view "prefs" of window "prefs"
-		tell tab view item "general" of tab view "prefs" of window "prefs"
+		tell tab view item "general"
 			set contents of text field "musicpath" of box "music" to (contents of default entry "musicPath" of user defaults of me)
 			set current menu item of popup button "phonedetected" to menu item (contents of default entry "phoneDetected" of user defaults of me) of popup button "phonedetected"
 			set content of button "confirmation" to contents of default entry "askForConfirmation" of user defaults of me
@@ -943,6 +968,7 @@ on initprefs()
 		make new default entry at end of default entries with properties {name:"chosenPlaylists", contents:{}}
 		make new default entry at end of default entries with properties {name:"whichPlaylists", contents:1}
 		make new default entry at end of default entries with properties {name:"handleS60Thumbnails", contents:false}
+		make new default entry at end of default entries with properties {name:"writeM3UPlaylists", contents:false}
 		make new default entry at end of default entries with properties {name:"debugging", contents:false}
 	end tell
 end initprefs

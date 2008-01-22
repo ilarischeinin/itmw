@@ -1,5 +1,6 @@
 "phone not found" = "Error: Could not find the phone.";
 "ambiguous path" = "Error: Path is ambiguous.";
+"Choose the music folder of the phone:" = "Choose the music folder of the phone:";
 "confirmation" = "iTuneMyWalkman will upload the contents of the selected iTunes playlists to the following folder. All files within that folder will be deleted. Are you sure you want to continue?";
 "confirmation2" = "This warning can be disabled from the preferences.";
 "complete" = "iTuneMyWalkman has completed the synchronization.";

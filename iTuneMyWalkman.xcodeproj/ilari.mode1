@@ -254,12 +254,11 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>1C37FABC05509CD000000102</string>
-								<string>E2644B35053B69B200211256</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>6</integer>
+									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
@@ -365,9 +364,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>617CAF170C171F870096F4AA</string>
+				<string>61B7AE390D4663D7006DC60B</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>617CAF180C171F870096F4AA</string>
+				<string>61B7AE3A0D4663D7006DC60B</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -502,7 +501,6 @@
 	<key>WindowOrderList</key>
 	<array>
 		<string>61AF997B099A9CA7008F708A</string>
-		<string>617CAF150C171F770096F4AA</string>
 		<string>/Users/ilari/Documents/iTuneMyWalkman/Source/iTuneMyWalkman.xcodeproj</string>
 		<string>1C0AD2B3069F1EA900FABCE6</string>
 	</array>
@@ -584,7 +582,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>61AF997B099A9CA7008F708A</string>
-				<string>617CAF1B0C171FF00096F4AA</string>
+				<string>61B7AE3B0D4663D7006DC60B</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -944,9 +942,9 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C0AD2B3069F1EA900FABCE6</string>
-				<string>617CAF1C0C171FF00096F4AA</string>
+				<string>61B7AE300D46634C006DC60B</string>
 				<string>1CD0528B0623707200166675</string>
-				<string>617CAF1D0C171FF00096F4AA</string>
+				<string>61B7AE310D46634C006DC60B</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.run</string>
