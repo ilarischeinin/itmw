@@ -2,9 +2,9 @@
 {
 	089C165DFE840E0CC02AAC07 /* English */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {963, 395}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1312, 745}}";
 			sepNavSelRange = "{88, 5}";
-			sepNavVisRect = "{{0, 0}, {963, 395}}";
+			sepNavVisRect = "{{0, 0}, {1312, 745}}";
 			sepNavWindowFrame = "{{15, -1}, {1351, 874}}";
 		};
 	};
@@ -235,8 +235,12 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 202841962;
-			PBXWorkspaceStateSaveDate = 202841962;
+			PBXPerProjectTemplateStateSaveDate = 222715984;
+			PBXWorkspaceStateSaveDate = 222715984;
+		};
+		perUserProjectItems = {
+			614F742F0C177920009CF4E0 = 614F742F0C177920009CF4E0 /* PBXBookmark */;
+			614F747C0C178210009CF4E0 = 614F747C0C178210009CF4E0 /* PBXTextBookmark */;
 		};
 		sourceControlManager = 25D9445A07B1533700FF306F /* Source Control */;
 		userBuildSettings = {
@@ -250,21 +254,19 @@
 			sepNavWindowFrame = "{{15, 59}, {1273, 814}}";
 		};
 	};
-	616530380BF8AC37000D9C96 /* COMPILING.txt */ = {
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {534, 157}}";
-			sepNavSelRange = "{26, 0}";
-			sepNavVisRect = "{{0, 0}, {534, 157}}";
-			sepNavWindowFrame = "{{488, 486}, {573, 286}}";
-		};
+	614F742F0C177920009CF4E0 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = DA206CF3015C4E8B03C91932 /* iTuneMyWalkman.applescript */;
 	};
-	61966B690BED1BE50089284B /* COPYING.txt */ = {
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {505, 301}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRect = "{{0, 0}, {505, 301}}";
-			sepNavWindowFrame = "{{277, 317}, {544, 430}}";
-		};
+	614F747C0C178210009CF4E0 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = DA206CF3015C4E8B03C91932 /* iTuneMyWalkman.applescript */;
+		name = "iTuneMyWalkman.applescript: 1032";
+		rLen = 0;
+		rLoc = 49556;
+		rType = 0;
+		vrLen = 2014;
+		vrLoc = 28134;
 	};
 	61AF992B099A759A008F708A /* iTMW - Detect Phone.applescript */ = {
 		uiCtxt = {
@@ -309,7 +311,7 @@
 	61AF993D099A7672008F708A /* English */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1579, 649}}";
-			sepNavSelRange = "{594, 0}";
+			sepNavSelRange = "{186, 0}";
 			sepNavVisRect = "{{0, 0}, {1579, 649}}";
 			sepNavWindowFrame = "{{15, 95}, {1618, 778}}";
 		};
@@ -322,9 +324,9 @@
 	};
 	DA206CF3015C4E8B03C91932 /* iTuneMyWalkman.applescript */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1829, 15285}}";
-			sepNavSelRange = "{49649, 0}";
-			sepNavVisRect = "{{0, 0}, {1626, 854}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1805, 15570}}";
+			sepNavSelRange = "{49556, 0}";
+			sepNavVisRect = "{{0, 12886}, {1626, 854}}";
 			sepNavWindowFrame = "{{15, 45}, {1665, 983}}";
 		};
 	};
