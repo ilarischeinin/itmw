@@ -103,7 +103,7 @@ on clicked theObject
 			set scriptdir to POSIX path of ((path to library folder from user domain as string) & "iTunes:Scripts:")
 			shellcmd("/bin/mkdir -p " & quoted form of scriptdir)
 			set mydir to (path to me) & "Contents:Resources:Scripts:" as string
-			shellcmd("/bin/cp " & quoted form of POSIX path of mydir & "iTMW*.scpt" & " " & quoted form of scriptdir)
+			shellcmd("/bin/cp " & (quoted form of POSIX path of mydir) & "iTMW*.scpt" & " " & quoted form of scriptdir)
 			shellcmd("/bin/rm -f " & quoted form of (scriptdir & "iTMW - Detect Phone.scpt"))
 			updateballs()
 		else if name of theObject = "removescripts" then
@@ -159,7 +159,7 @@ on clicked theObject
 				set contentlist to contents of table view "filetypes" of scroll view "filetypes" of tab view item "encode" of tab view "prefs" of window "prefs"
 				set newcontentlist to {}
 				repeat with i from 1 to count contentlist
-					if i ­ theRow then set newcontentlist to newcontentlist & {item i of contentlist}
+					if i â‰  theRow then set newcontentlist to newcontentlist & {item i of contentlist}
 				end repeat
 				set contents of table view "filetypes" of scroll view "filetypes" of tab view item "encode" of tab view "prefs" of window "prefs" to newcontentlist
 			end if
@@ -177,7 +177,9 @@ on clicked theObject
 				tell tab view item "playlists"
 					set contents of default entry "syncMusic" of user defaults of me to content of button "syncmusic"
 					set contents of default entry "syncPodcasts" of user defaults of me to content of button "syncpodcasts"
+					set contents of default entry "syncAudiobooks" of user defaults of me to content of button "syncaudiobooks"
 					set contents of default entry "whichPlaylists" of user defaults of me to current row of matrix "whichlists"
+					set contents of default entry "writeM3UPlaylists" of user defaults of me to content of button "writem3uplaylists"
 					set chosenlists to {}
 					set checkedlist to contents of table view "playlists" of scroll view "playlists"
 					repeat with x in checkedlist
@@ -314,7 +316,7 @@ on startsync()
 	repeat with i from 1 to count filetypelist
 		set myfiletypelimits to myfiletypelimits & {{item i of filetypelist, item i of bitratelist}}
 	end repeat
-	if myencoder ­ 1 then
+	if myencoder â‰  1 then
 		set emptytrack to (path to me) & "Contents:Resources:empty.m4a" as string
 		tell application "iTunes"
 			set oldenc to current encoder
@@ -358,14 +360,14 @@ on movepics(myprocess)
 	set s60thumbs to contents of default entry "handleS60Thumbnails" of user defaults
 	set excludestring to ""
 	repeat with x in myexclude
-		if x as string ­ "" then set excludestring to excludestring & " -not -iname \"" & x & "\" -not -ipath \"*/" & x & "/*\""
+		if x as string â‰  "" then set excludestring to excludestring & " -not -iname " & (quoted form of x) & " -not -ipath " & quoted form of ("*/" & x & "/*")
 	end repeat
 	set myimagepath to getpath(contents of default entry "cameraImagePath" of user defaults)
-	if myimagepath ­ "notfound" and myimagepath ­ "ambiguous" then
+	if myimagepath â‰  "notfound" and myimagepath â‰  "ambiguous" then
 		if s60thumbs then
-			set imgs to shellcmd("/usr/bin/find " & quoted form of myimagepath & " -type f -iname '*.jpg' -not -name '.*'" & excludestring)
+			set imgs to shellcmd("/usr/bin/find " & (quoted form of myimagepath) & " -type f -iname '*.jpg' -not -name '.*'" & excludestring)
 		else
-			set imgs to shellcmd("/usr/bin/find " & quoted form of myimagepath & " -type f -not -name '.*'" & excludestring)
+			set imgs to shellcmd("/usr/bin/find " & (quoted form of myimagepath) & " -type f -not -name '.*'" & excludestring)
 		end if
 		repeat with x in every paragraph of imgs
 			if x as string = "" then exit repeat
@@ -374,8 +376,8 @@ on movepics(myprocess)
 		end repeat
 	end if
 	set myvideopath to getpath(contents of default entry "cameraVideoPath" of user defaults)
-	if myvideopath ­ "notfound" and myvideopath ­ "ambiguous" then
-		set vids to shellcmd("/usr/bin/find " & quoted form of myvideopath & " -type f -not -name '.*'" & excludestring)
+	if myvideopath â‰  "notfound" and myvideopath â‰  "ambiguous" then
+		set vids to shellcmd("/usr/bin/find " & (quoted form of myvideopath) & " -type f -not -name '.*'" & excludestring)
 		repeat with x in every paragraph of vids
 			if x as string = "" then exit repeat
 			set fils to fils & {x as string}
@@ -398,34 +400,34 @@ on movepics(myprocess)
 			tell application iphoto
 				import from importlist
 				repeat while importing
-					my shellcmd("/bin/sleep 1")
+					delay 1
 				end repeat
 				set imported to count photos of last rolls album
 			end tell
 		end using terms from
 		set num to count importlist
-		if imported ­ num then
+		if imported â‰  num then
 			set sure to display dialog "iTuneMyWalkman tried to import " & num & " items to iPhoto, but your last rolls album contains " & imported & " pictures. Should iTuneMyWalkman delete the files from the memory stick or not?" buttons {localized string "Delete", localized string "Keep Files"}
 			if button returned of sure = (localized string "Keep Files") then return
 		end if
 		repeat with x in fils
 			if s60thumbs then
-				shellcmd("/bin/rm -rf " & quoted form of x & "*")
+				shellcmd("/bin/rm -rf " & (quoted form of x) & "*")
 			else
 				shellcmd("/bin/rm -rf " & quoted form of x)
 			end if
 		end repeat
 	else
 		set mymovepath to contents of default entry "moveImagesTo" of user defaults
-		if mymovepath ­ "notfound" and mymovepath ­ "ambiguous" then
+		if mymovepath â‰  "notfound" and mymovepath â‰  "ambiguous" then
 			set newdir to shellcmd("/bin/date '+%y-%m-%d\\ %H.%M.%S'")
 			shellcmd("/bin/mkdir -p " & mymovepath & newdir)
 			repeat with x in fils
 				if x as string = "" then exit repeat
 				try
-					shellcmd("/bin/cp " & quoted form of x & " " & mymovepath & newdir)
+					shellcmd("/bin/cp " & (quoted form of x) & " " & mymovepath & newdir)
 					if s60thumbs then
-						shellcmd("/bin/rm " & quoted form of x & "*")
+						shellcmd("/bin/rm " & (quoted form of x) & "*")
 					else
 						shellcmd("/bin/rm " & quoted form of x)
 					end if
@@ -458,20 +460,36 @@ on getsongs()
 	set mysizelimit to contents of default entry "sizeLimit" of user defaults
 	if mysizelimit < 0 then
 		tell application "Finder" to set mysizelimit to (free space of disk of folder (POSIX file musicpath as string)) + mysizelimit
+		if debugging then tell me to log "free space on disk: " & mysizelimit
+		--	Use the du (disk usage) command to subtract the potential size the music files to be removed.
+		set myexclude to contents of default entry "dontTouch" of user defaults
+		set excludestring to ""
+		--	Build up the options for du to ignore the folders to not to touch.
+		repeat with x in myexclude
+			if x as string â‰  "" then set excludestring to excludestring & "-I " & (quoted form of x) & " "
+		end repeat
+		--	Get the size which would be freed if the music folder gets cleaned.
+		set musicpathsize to last paragraph of shellcmd("/usr/bin/du -k -c " & excludestring & quoted form of musicpath)
+		set musicpathsize to ((first word of musicpathsize as integer) * 1024)
+		if debugging then tell me to log "space occupied by " & musicpath & ": " & musicpathsize
+		--	Add that size to the available size limit.
+		set mysizelimit to mysizelimit + musicpathsize
 	end if
+	if debugging then tell me to log "size limit: " & mysizelimit
 	set syncmusic to contents of default entry "syncMusic" of user defaults
 	set syncpodcasts to contents of default entry "syncPodcasts" of user defaults
+	set syncaudiobooks to contents of default entry "syncAudiobooks" of user defaults
 	set whichlists to contents of default entry "whichPlaylists" of user defaults
 	set writem3u to contents of default entry "writeM3UPlaylists" of user defaults
 	if syncpodcasts then
 		tell application "iTunes"
 			set plists to every playlist whose special kind = Podcasts
 			repeat with plist in plists
-				set playlistname to name of user playlist plist
+				set playlistname to name of plist
 				set m3u to ""
 				repeat with x in (every file track of plist whose enabled = true)
 					set songfile to location of x
-					if songfile ­ missing value and songfile is not in filelist then
+					if songfile â‰  missing value and songfile is not in filelist then
 						tell application "Finder"
 							set songname to name of songfile as string
 							set suffix to "." & name extension of songfile as string
@@ -486,7 +504,7 @@ on getsongs()
 								set filesize to size of x
 								set encoded to false
 							end if
-							if mysizelimit = 0 or (totalsize + filesize ² mysizelimit) then
+							if mysizelimit = 0 or (totalsize + filesize â‰¤ mysizelimit) then
 								set filelist to filelist & {songfile}
 								set tracklist to tracklist & {x}
 								if myincsync > 0 then
@@ -494,29 +512,147 @@ on getsongs()
 									set played date of x to current date
 								end if
 								set songlist to songlist & {songname}
-								set totalsize to totalsize + filesize
+								set totalsize to totalsize + (filesize + 511) div 512 * 512
 								set encodelist to encodelist & {encoded}
-								if mydirlevel = 2 then
-									set targetlist to targetlist & {musicpath & "/Podcasts/Podcasts/" & songname}
-									set m3u to m3u & "Podcasts\\Podcasts\\" & songname & return
-									set tmp to musicpath & "/Podcasts/Podcasts"
+								set artistname to my strip(name of plist)
+								if artistname = "" then set artistname to "Podcasts"
+								if mydirstruct = 1 then -- artist/album/
+									set albumname to my strip(album of x as string)
+									if albumname = "" then set albumname to my strip(album artist of x as string)
+									if albumname = "" then set albumname to my strip(artist of x as string)
+									if albumname = "" then set albumname to artistname
+								else if mydirstruct = 2 then -- Music/playlist/
+									set albumname to my strip(album of x as string)
+									if albumname = "" then set albumname to my strip(album artist of x as string)
+									if albumname = "" then set albumname to my strip(artist of x as string)
+									if albumname = "" then set albumname to artistname
+								else -- iTuneMyWalkman/genre/
+									set albumname to my strip(album of x as string)
+									if albumname = "" then set albumname to my strip(album artist of x as string)
+									if albumname = "" then set albumname to my strip(artist of x as string)
+									if albumname = "" then set albumname to artistname
+								end if
+								if mydirlevel = 2 then -- two levels of folders
+									set m3u to m3u & artistname & "/" & albumname & "/"
+									set targetlist to targetlist & {musicpath & "/" & artistname & "/" & albumname & "/" & songname}
+									set tmp to musicpath & "/" & artistname
 									if tmp is not in dirlist then set dirlist to dirlist & {tmp}
-									set tmp to musicpath & "/Podcasts"
+									set tmp to musicpath & "/" & artistname & "/" & albumname
 									if tmp is not in dirlist then set dirlist to dirlist & {tmp}
-								else if mydirlevel = 1 then
-									set targetlist to targetlist & {musicpath & "/Podcasts/" & songname}
-									set tmp to musicpath & "/Podcasts"
+								else if mydirlevel = 1 then -- one folder level
+									set m3u to m3u & albumname & "/"
+									set targetlist to targetlist & {musicpath & "/" & albumname & "/" & songname}
+									set tmp to musicpath & "/" & albumname
 									if tmp is not in dirlist then set dirlist to dirlist & {tmp}
-								else
+								else -- no folders
 									set targetlist to targetlist & {musicpath & "/" & songname}
 								end if
+								set m3u to m3u & songname & return
+								if debugging then tell me to log "totalsize: " & totalsize
+							else
+								if debugging then tell me to log "no space left for " & songfile & " (needs " & filesize & ", only " & mysizelimit - totalsize & " available)"
+								if mysizelimit - totalsize â‰¤ 3 * 1024 * 1024 then exit repeat
 							end if
 						end if
 					end if
 				end repeat
 				if writem3u then
 					tell me
+						set m3u to convertText(m3u) as string
 						set fp to open for access (POSIX file (musicpath & playlistname & ".m3u")) with write permission
+						set eof fp to 0
+						write m3u to fp
+						close access fp
+					end tell
+				end if
+			end repeat
+		end tell
+	end if
+	if syncaudiobooks then
+		tell application "iTunes"
+			set plists to every playlist whose special kind = Audiobooks
+			repeat with plist in plists
+				set playlistname to name of plist
+				set m3u to ""
+				repeat with x in (every file track of plist whose enabled = true)
+					set songfile to location of x
+					if songfile â‰  missing value and songfile is not in filelist then
+						tell application "Finder"
+							set songname to name of songfile as string
+							set suffix to "." & name extension of songfile as string
+							if suffix = ".m4b" then
+								set songname to characters 1 thru (-1 - (count suffix)) of songname
+								set suffix to ".m4a"
+								set songname to songname & suffix as string
+							end if
+						end tell
+						set howto to my whattodo(suffix, bit rate of x)
+						if howto > -1 then
+							if howto = 1 then
+								set filesize to (duration of x) * mybitrate * 125 -- 125 = 1000 / 8
+								set songname to characters 1 thru (-1 - (count suffix)) of songname & mysuffix as string
+								set encoded to true
+							else
+								set filesize to size of x
+								set encoded to false
+							end if
+							if mysizelimit = 0 or (totalsize + filesize â‰¤ mysizelimit) then
+								set filelist to filelist & {songfile}
+								set tracklist to tracklist & {x}
+								if myincsync > 0 then
+									set played count of x to (played count of x) + myincsync
+									set played date of x to current date
+								end if
+								set songlist to songlist & {songname}
+								set totalsize to totalsize + (filesize + 511) div 512 * 512
+								set encodelist to encodelist & {encoded}
+								set artistname to my strip(name of plist)
+								if artistname = "" then set artistname to "Audiobooks"
+								if mydirstruct = 1 then -- artist/album/
+									set albumname to my strip(album of x as string)
+									if albumname = "" then set albumname to my strip(album artist of x as string)
+									if albumname = "" then set albumname to my strip(artist of x as string)
+									if albumname = "" then set albumname to artistname
+								else if mydirstruct = 2 then -- Music/playlist/
+									set albumname to my strip(album of x as string)
+									if albumname = "" then set albumname to my strip(album artist of x as string)
+									if albumname = "" then set albumname to my strip(artist of x as string)
+									if albumname = "" then set albumname to artistname
+								else -- iTuneMyWalkman/genre/
+									set albumname to my strip(album of x as string)
+									if albumname = "" then set albumname to my strip(album artist of x as string)
+									if albumname = "" then set albumname to my strip(artist of x as string)
+									if albumname = "" then set albumname to artistname
+								end if
+								if mydirlevel = 2 then -- two levels of folders
+									set m3u to m3u & artistname & "/" & albumname & "/"
+									set targetlist to targetlist & {musicpath & "/" & artistname & "/" & albumname & "/" & songname}
+									set tmp to musicpath & "/" & artistname
+									if tmp is not in dirlist then set dirlist to dirlist & {tmp}
+									set tmp to musicpath & "/" & artistname & "/" & albumname
+									if tmp is not in dirlist then set dirlist to dirlist & {tmp}
+								else if mydirlevel = 1 then -- one folder level
+									set m3u to m3u & albumname & "/"
+									set targetlist to targetlist & {musicpath & "/" & albumname & "/" & songname}
+									set tmp to musicpath & "/" & albumname
+									if tmp is not in dirlist then set dirlist to dirlist & {tmp}
+								else -- no folders
+									set targetlist to targetlist & {musicpath & "/" & songname}
+								end if
+								set m3u to m3u & songname & return
+								if debugging then tell me to log "totalsize: " & totalsize
+							else
+								if debugging then tell me to log "no space left for " & songfile & " (needs " & filesize & ", only " & mysizelimit - totalsize & " available)"
+								if mysizelimit - totalsize â‰¤ 3 * 1024 * 1024 then exit repeat
+							end if
+						end if
+					end if
+				end repeat
+				if writem3u then
+					tell me
+						set m3u to convertText(m3u) as string
+						set fp to open for access (POSIX file (musicpath & playlistname & ".m3u")) with write permission
+						set eof fp to 0
 						write m3u to fp
 						close access fp
 					end tell
@@ -532,7 +668,7 @@ on getsongs()
 					if (exists parent of x) and (name of parent of x begins with "iTuneMyWalkman" or name of parent of x begins with "iTMW") then
 						set plists to plists & {name of x}
 					end if
-					if special kind of x ­ folder and (name of x begins with "iTuneMyWalkman" or name of x begins with "iTMW") then
+					if special kind of x â‰  folder and (name of x begins with "iTuneMyWalkman" or name of x begins with "iTMW") then
 						set plists to plists & {name of x}
 					end if
 				end repeat
@@ -555,16 +691,23 @@ on getsongs()
 			end repeat
 		end repeat
 		tell application "iTunes"
+			set musicm3u to ""
+			set m3u to ""
 			repeat with plist in plists
 				if exists user playlist plist then
 					set playlistname to name of user playlist plist
 					set m3u to ""
 					repeat with x in (every file track of user playlist plist whose enabled = true)
 						set songfile to location of x
-						if songfile ­ missing value and songfile is not in filelist then
+						if songfile â‰  missing value and songfile is not in filelist then
 							tell application "Finder"
 								set songname to name of songfile as string
 								set suffix to "." & name extension of songfile as string
+								if suffix = ".m4b" then
+									set songname to characters 1 thru (-1 - (count suffix)) of songname
+									set suffix to ".m4a"
+									set songname to songname & suffix as string
+								end if
 							end tell
 							set howto to my whattodo(suffix, bit rate of x)
 							if howto > -1 then
@@ -576,7 +719,7 @@ on getsongs()
 									set filesize to size of x
 									set encoded to false
 								end if
-								if mysizelimit = 0 or (totalsize + filesize ² mysizelimit) then
+								if mysizelimit = 0 or (totalsize + filesize â‰¤ mysizelimit) then
 									set filelist to filelist & {songfile}
 									set tracklist to tracklist & {x}
 									if myincsync > 0 then
@@ -584,7 +727,7 @@ on getsongs()
 										set played date of x to current date
 									end if
 									set songlist to songlist & {songname}
-									set totalsize to totalsize + filesize
+									set totalsize to totalsize + (filesize + 511) div 512 * 512
 									set encodelist to encodelist & {encoded}
 									if mydirstruct = 1 then -- artist/album/
 										set artistname to my strip(album artist of x as string)
@@ -603,27 +746,33 @@ on getsongs()
 										if albumname = "" then set albumname to "Unknown Genre"
 									end if
 									if mydirlevel = 2 then -- two levels of folders
+										set m3u to m3u & artistname & "/" & albumname & "/"
 										set targetlist to targetlist & {musicpath & "/" & artistname & "/" & albumname & "/" & songname}
-										set m3u to m3u & artistname & "\\" & albumname & "\\" & songname & return
 										set tmp to musicpath & "/" & artistname
 										if tmp is not in dirlist then set dirlist to dirlist & {tmp}
 										set tmp to musicpath & "/" & artistname & "/" & albumname
 										if tmp is not in dirlist then set dirlist to dirlist & {tmp}
 									else if mydirlevel = 1 then -- one folder level
+										set m3u to m3u & albumname & "/"
 										set targetlist to targetlist & {musicpath & "/" & albumname & "/" & songname}
-										set m3u to m3u & albumname & "\\" & songname & return
 										set tmp to musicpath & "/" & albumname
 										if tmp is not in dirlist then set dirlist to dirlist & {tmp}
 									else -- no folders
 										set targetlist to targetlist & {musicpath & "/" & songname}
-										set m3u to m3u & songname & return
 									end if
+									set m3u to m3u & songname & return
+									if debugging then tell me to log "totalsize: " & totalsize
+								else
+									if debugging then tell me to log "no space left for " & songfile & " (needs " & filesize & ", only " & mysizelimit - totalsize & " available)"
+									if mysizelimit - totalsize â‰¤ 3 * 1024 * 1024 then exit repeat
 								end if
 							end if
 						end if
 					end repeat
 					if writem3u then
 						tell me
+							set m3u to convertText(m3u)
+							set musicm3u to musicm3u & m3u
 							set fp to open for access (POSIX file (musicpath & playlistname & ".m3u")) with write permission
 							set eof fp to 0
 							write m3u to fp
@@ -632,8 +781,19 @@ on getsongs()
 					end if
 				end if
 			end repeat
+			if writem3u then
+				tell me
+					set fp to open for access (POSIX file (musicpath & "Music.m3u")) with write permission
+					set eof fp to 0
+					write musicm3u to fp
+					close access fp
+				end tell
+			end if
 		end tell
 	end if
+	if debugging then tell me to log "filelist: " & return & filelist
+	if debugging then tell me to log "targetlist: " & return & targetlist
+	if debugging then tell me to log "dirlist: " & return & dirlist
 	if debugging then log "getsongs ends"
 end getsongs
 
@@ -647,22 +807,22 @@ on deleteolds()
 	set myexclude to contents of default entry "dontTouch" of user defaults
 	set excludestring to ""
 	repeat with x in myexclude
-		if x as string ­ "" then set excludestring to excludestring & " -not -iname \"" & x & "\" -not -ipath \"*/" & x & "/*\""
+		if x as string â‰  "" then set excludestring to excludestring & " -not -iname " & (quoted form of x) & " -not -ipath " & quoted form of ("*/" & x & "/*")
 	end repeat
-	set dirs to shellcmd("/usr/bin/find " & quoted form of musicpath & " -type d" & excludestring)
+	set dirs to shellcmd("/usr/bin/find " & (quoted form of musicpath) & " -type d" & excludestring)
 	repeat with x in every paragraph of dirs
 		if x as string = "" then exit repeat
 		if x is not in dirlist then
-			shellcmd("/bin/rm -rf " & quoted form of x)
 			if debugging then log "deleting unneeded directory: " & x
+			shellcmd("/bin/rm -rf " & quoted form of x)
 		end if
 	end repeat
-	set fils to shellcmd("/usr/bin/find " & quoted form of musicpath & " -type f -not -iname \"*.m3u\"" & excludestring)
+	set fils to shellcmd("/usr/bin/find " & (quoted form of musicpath) & " -type f -not -iname " & (quoted form of "*.m3u") & excludestring)
 	repeat with x in every paragraph of fils
 		if x as string = "" then exit repeat
 		if x is not in targetlist then
-			shellcmd("/bin/rm -f " & quoted form of x)
 			if debugging then log "deleting unneeded file: " & x
+			shellcmd("/bin/rm -f " & quoted form of x)
 		end if
 	end repeat
 	if debugging then log "deleteolds ends"
@@ -692,6 +852,7 @@ on copynext()
 	global musicpath, pos, mydirlevel, mydirstruct, myincsync, myinccopy, filelist, songlist, targetlist, tracklist, encodelist, total, copied, copiedsize, notcopied
 	if pos > total then
 		set stage to "finishing"
+		if debugging then tell me to log "not copied due to error: " & notcopied
 		cleanup()
 		return 1
 	end if
@@ -701,7 +862,7 @@ on copynext()
 	end tell
 	set wasfound to true
 	try
-		shellcmd("/bin/test -f " & quoted form of (characters 1 thru -4 of (item pos of targetlist) as Unicode text) & "*")
+		shellcmd("/bin/test -f " & (quoted form of (characters 1 thru -4 of (item pos of targetlist) as Unicode text)) & "*")
 	on error
 		set wasfound to false
 	end try
@@ -710,9 +871,9 @@ on copynext()
 			if not item pos of encodelist then -- just copy
 				tell application "Finder" to set thesize to size of (item pos of filelist)
 				try
-					shellcmd("/bin/cp " & quoted form of POSIX path of (item pos of filelist) & " " & quoted form of item pos of targetlist)
+					shellcmd("/bin/cp " & (quoted form of POSIX path of (item pos of filelist)) & " " & quoted form of item pos of targetlist)
 					set copied to copied + 1
-					if thesize ­ missing value then set copiedsize to copiedsize + thesize
+					if thesize â‰  missing value then set copiedsize to copiedsize + thesize
 					if myinccopy > 0 then
 						tell application "iTunes"
 							set played count of item pos of tracklist to (played count of item pos of tracklist) + myinccopy
@@ -731,9 +892,9 @@ on copynext()
 				end tell
 				tell application "Finder" to set thesize to size of encodedfile
 				try
-					shellcmd("/bin/cp " & quoted form of POSIX path of encodedfile & " " & quoted form of item pos of targetlist)
+					shellcmd("/bin/cp " & (quoted form of POSIX path of encodedfile) & " " & quoted form of item pos of targetlist)
 					set copied to copied + 1
-					if thesize ­ missing value then set copiedsize to copiedsize + thesize
+					if thesize â‰  missing value then set copiedsize to copiedsize + thesize
 					if myinccopy > 0 then
 						tell application "iTunes"
 							set played count of item pos of tracklist to (played count of item pos of tracklist) + myinccopy
@@ -768,18 +929,18 @@ on cleanup()
 		update
 	end tell
 	try
-		shellcmd("/usr/bin/find " & quoted form of musicpath & " -name '.DS_Store' -exec rm {} \\;")
+		shellcmd("/usr/bin/find " & (quoted form of musicpath) & " -name '.DS_Store' -exec rm {} \\;")
 	end try
 	try
-		shellcmd("/usr/bin/find " & quoted form of musicpath & " -name '._*' -exec rm {} \\;")
+		shellcmd("/usr/bin/find " & (quoted form of musicpath) & " -name '._*' -exec rm {} \\;")
 	end try
-	if myencoder ­ 1 then tell application "iTunes" to set current encoder to oldenc
+	if myencoder â‰  1 then tell application "iTunes" to set current encoder to oldenc
 	set duration to (current date) - starttime
 	set mydone to contents of default entry "synchronizationComplete" of user defaults
 	if mydone = 2 then -- Ask
 		using terms from application "System Events"
 			set themessage to localized string "Copied" & " " & copied & " / " & total & " " & (localized string "tracks" & " (" & (copiedsize * 10 / 1024 div 1024 / 10) & " " & (localized string "MB" & " / " & (totalsize * 10 / 1024 div 1024 / 10) & " " & (localized string "MB" & ")")))
-			if notcopied ­ 0 then set themessage to themessage & return & (localized string "Warning" & ": " & notcopied & " " & (localized string "files could not be copied."))
+			if notcopied â‰  0 then set themessage to themessage & return & (localized string "Warning" & ": " & notcopied & " " & (localized string "files could not be copied."))
 			set unmount to button returned of (display alert (localized string "complete") message themessage buttons {localized string "Don't Unmount", localized string "Unmount"})
 			if unmount = (localized string "Unmount") then
 				tell application "Finder" to eject disk of folder (POSIX file musicpath as string)
@@ -825,16 +986,30 @@ on strip(txt)
 	end try
 end strip
 
+on convertText(theText)
+	--convert to windows encoding
+	set theConverts to {196, 197, 199, 201, 209, 214, 220, 225, 224, 226, 228, 227, 229, 231, 233, 232, 234, 235, 237, 236, 238, 239, 241, 243, 242, 244, 246, 245, 250, 249, 251, 252, 134, 176, 162, 163, 167, 149, 182, 223, 174, 169, 153, 180, 168, 149, 198, 216, 149, 177, 149, 149, 165, 181, 149, 149, 149, 149, 149, 170, 186, 149, 230, 248, 191, 161}
+	set theTextX to ""
+	repeat with eachLetter in theText
+		set asciiNum to ASCII number of eachLetter
+		if asciiNum > 127 and asciiNum < 194 then
+			set asciiNum to item (asciiNum - 127) of theConverts
+		end if
+		set theTextX to theTextX & (ASCII character asciiNum)
+	end repeat
+	return theTextX
+end convertText
+
 on shellcmd(cmd)
 	if debugging then log "Running shell command: " & cmd
-	return do shell script cmd
+	tell me to return do shell script cmd
 end shellcmd
 
 on whattodo(filetype, bitrate)
 	global myencoder, myfiletypelimits
 	repeat with x in myfiletypelimits
 		if item 1 of x = filetype then
-			if myencoder ­ 1 and bitrate > item 2 of x then
+			if myencoder â‰  1 and bitrate > item 2 of x then
 				return 1 -- re-encode
 			else
 				return 0 -- copy
@@ -896,7 +1071,9 @@ on showprefs()
 		tell tab view item "playlists"
 			set content of button "syncmusic" to contents of default entry "syncMusic" of user defaults of me
 			set content of button "syncpodcasts" to contents of default entry "syncPodcasts" of user defaults of me
+			set content of button "syncaudiobooks" to contents of default entry "syncAudiobooks" of user defaults of me
 			set current row of matrix "whichlists" to contents of default entry "whichPlaylists" of user defaults of me
+			set content of button "writem3uplaylists" to contents of default entry "writeM3UPlaylists" of user defaults of me
 			set chosenlists to contents of default entry "chosenPlaylists" of user defaults of me
 			set checkedlist to {}
 			tell application "iTunes" to set alllists to name of every user playlist
@@ -948,8 +1125,10 @@ on initprefs()
 		make new default entry at end of default entries with properties {name:"videoPath", contents:"/Volumes/*/MSSEMC/Media\\ files/video/"}
 		make new default entry at end of default entries with properties {name:"phoneDetected", contents:2}
 		make new default entry at end of default entries with properties {name:"askForConfirmation", contents:true}
+		make new default entry at end of default entries with properties {name:"SUCheckAtStartup", contents:false}
 		make new default entry at end of default entries with properties {name:"syncMusic", contents:true}
 		make new default entry at end of default entries with properties {name:"syncPodcasts", contents:true}
+		make new default entry at end of default entries with properties {name:"syncAudiobooks", contents:true}
 		make new default entry at end of default entries with properties {name:"synchronizationComplete", contents:2}
 		make new default entry at end of default entries with properties {name:"sizeLimit", contents:0}
 		make new default entry at end of default entries with properties {name:"directoryStructure", contents:1}
