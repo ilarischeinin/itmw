@@ -34,9 +34,12 @@ on initprefs()
 on checkforold()
 *)
 
+property debugging : false
 property stage : "init"
 property itmwversion : "0.941"
-property debugging : false
+-- This should be updated whenever the iTunes scripts or the folder action script change.
+-- At startup the value of this property is compared to the value stored in the preferences file.
+-- If it has changed, we have never scripts and they are installed at startup.
 
 -- EVENT HANDLERS
 
