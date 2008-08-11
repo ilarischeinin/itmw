@@ -1,0 +1,403 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXAppleScriptBuildPhase section */
+		257572C4072881A4000BE9CA /* AppleScript */ = {
+			isa = PBXAppleScriptBuildPhase;
+			buildActionMask = 2147483647;
+			contextName = "";
+			files = (
+				257572C5072881A4000BE9CA /* iTuneMyWalkman.applescript in AppleScript */,
+				61AF9931099A759A008F708A /* iTMW - Detect Phone.applescript in AppleScript */,
+				61AF9932099A759A008F708A /* iTMW - Increment Play Count.applescript in AppleScript */,
+				61AF9933099A759A008F708A /* iTMW - Preferences.applescript in AppleScript */,
+				61AF9934099A759A008F708A /* iTMW - Synchronize.applescript in AppleScript */,
+				61AF9935099A759A008F708A /* iTMW - Unmount Phone.applescript in AppleScript */,
+			);
+			isSharedContext = 0;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXAppleScriptBuildPhase section */
+
+/* Begin PBXBuildFile section */
+		257572C5072881A4000BE9CA /* iTuneMyWalkman.applescript in AppleScript */ = {isa = PBXBuildFile; fileRef = DA206CF3015C4E8B03C91932 /* iTuneMyWalkman.applescript */; settings = {ATTRIBUTES = (Debug, ); }; };
+		257572C7072881A4000BE9CA /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
+		257572C8072881A4000BE9CA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
+		257572CA072881A4000BE9CA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		257572CC072881A4000BE9CA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		257572CD072881A4000BE9CA /* AppleScriptKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA206CF1015C4E2903C91932 /* AppleScriptKit.framework */; };
+		611A0BD00A407E7000292A8D /* green.gif in Resources */ = {isa = PBXBuildFile; fileRef = 611A0BCF0A407E7000292A8D /* green.gif */; };
+		611A0BD50A407F9000292A8D /* red.gif in Resources */ = {isa = PBXBuildFile; fileRef = 611A0BD40A407F9000292A8D /* red.gif */; };
+		6161B5310A414C290004C1C8 /* empty.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 6161B5300A414C290004C1C8 /* empty.m4a */; };
+		61AF9931099A759A008F708A /* iTMW - Detect Phone.applescript in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992B099A759A008F708A /* iTMW - Detect Phone.applescript */; settings = {ATTRIBUTES = (Debug, ); }; };
+		61AF9932099A759A008F708A /* iTMW - Increment Play Count.applescript in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992C099A759A008F708A /* iTMW - Increment Play Count.applescript */; settings = {ATTRIBUTES = (Debug, ); }; };
+		61AF9933099A759A008F708A /* iTMW - Preferences.applescript in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992D099A759A008F708A /* iTMW - Preferences.applescript */; settings = {ATTRIBUTES = (Debug, ); }; };
+		61AF9934099A759A008F708A /* iTMW - Synchronize.applescript in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992E099A759A008F708A /* iTMW - Synchronize.applescript */; settings = {ATTRIBUTES = (Debug, ); }; };
+		61AF9935099A759A008F708A /* iTMW - Unmount Phone.applescript in AppleScript */ = {isa = PBXBuildFile; fileRef = 61AF992F099A759A008F708A /* iTMW - Unmount Phone.applescript */; settings = {ATTRIBUTES = (Debug, ); }; };
+		61AF9939099A75BF008F708A /* iTuneMyWalkman.icns in Resources */ = {isa = PBXBuildFile; fileRef = 61AF9938099A75BF008F708A /* iTuneMyWalkman.icns */; };
+		61AFF1D30AFFC14500DF733F /* paypal.gif in Resources */ = {isa = PBXBuildFile; fileRef = 61AFF1D20AFFC14500DF733F /* paypal.gif */; };
+		61E16A0F0C1705A3002C2303 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E169FB0C1705A3002C2303 /* Sparkle.framework */; };
+		61E16A120C170613002C2303 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 61E169FB0C1705A3002C2303 /* Sparkle.framework */; };
+		61EBDFE70BF7230000F1B405 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 61EBDFE60BF7230000F1B405 /* Localizable.strings */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		61E16A100C1705E1002C2303 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				61E16A120C170613002C2303 /* Sparkle.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		257572D5072881A4000BE9CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		257572D6072881A4000BE9CA /* iTuneMyWalkman.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iTuneMyWalkman.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		611A0BCF0A407E7000292A8D /* green.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = green.gif; sourceTree = "<group>"; };
+		611A0BD40A407F9000292A8D /* red.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = red.gif; sourceTree = "<group>"; };
+		6161B5300A414C290004C1C8 /* empty.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = empty.m4a; sourceTree = "<group>"; };
+		61AF992B099A759A008F708A /* iTMW - Detect Phone.applescript */ = {isa = PBXFileReference; explicitFileType = sourcecode.applescript; fileEncoding = 30; path = "iTMW - Detect Phone.applescript"; sourceTree = "<group>"; };
+		61AF992C099A759A008F708A /* iTMW - Increment Play Count.applescript */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.applescript; path = "iTMW - Increment Play Count.applescript"; sourceTree = "<group>"; };
+		61AF992D099A759A008F708A /* iTMW - Preferences.applescript */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.applescript; path = "iTMW - Preferences.applescript"; sourceTree = "<group>"; };
+		61AF992E099A759A008F708A /* iTMW - Synchronize.applescript */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.applescript; path = "iTMW - Synchronize.applescript"; sourceTree = "<group>"; };
+		61AF992F099A759A008F708A /* iTMW - Unmount Phone.applescript */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.applescript; path = "iTMW - Unmount Phone.applescript"; sourceTree = "<group>"; };
+		61AF9938099A75BF008F708A /* iTuneMyWalkman.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = iTuneMyWalkman.icns; sourceTree = "<group>"; };
+		61AF993D099A7672008F708A /* English */ = {isa = PBXFileReference; explicitFileType = text.plist.strings; fileEncoding = 4; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		61AFF1D20AFFC14500DF733F /* paypal.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = paypal.gif; sourceTree = "<group>"; };
+		61E169FB0C1705A3002C2303 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
+		65359356078DD41800E8BB2F /* AppleScriptKit.sdef */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.sdef; name = AppleScriptKit.sdef; path = /System/Library/Frameworks/AppleScriptKit.framework/Versions/A/Resources/AppleScriptKit.sdef; sourceTree = "<absolute>"; };
+		DA206CF1015C4E2903C91932 /* AppleScriptKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppleScriptKit.framework; path = /System/Library/Frameworks/AppleScriptKit.framework; sourceTree = "<absolute>"; };
+		DA206CF3015C4E8B03C91932 /* iTuneMyWalkman.applescript */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.applescript; path = iTuneMyWalkman.applescript; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		257572CB072881A4000BE9CA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				257572CC072881A4000BE9CA /* Cocoa.framework in Frameworks */,
+				257572CD072881A4000BE9CA /* AppleScriptKit.framework in Frameworks */,
+				61E16A0F0C1705A3002C2303 /* Sparkle.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				DA206CF3015C4E8B03C91932 /* iTuneMyWalkman.applescript */,
+				61AF992B099A759A008F708A /* iTMW - Detect Phone.applescript */,
+				61AF992C099A759A008F708A /* iTMW - Increment Play Count.applescript */,
+				61AF992D099A759A008F708A /* iTMW - Preferences.applescript */,
+				61AF992E099A759A008F708A /* iTMW - Synchronize.applescript */,
+				61AF992F099A759A008F708A /* iTMW - Unmount Phone.applescript */,
+			);
+			name = Scripts;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+				DA206CF1015C4E2903C91932 /* AppleScriptKit.framework */,
+				61E169FB0C1705A3002C2303 /* Sparkle.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				257572D6072881A4000BE9CA /* iTuneMyWalkman.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* iTuneMyWalkman */ = {
+			isa = PBXGroup;
+			children = (
+				080E96DDFE201D6D7F000001 /* Scripts */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = iTuneMyWalkman;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				29B97316FDCFA39411CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				61AF9938099A75BF008F708A /* iTuneMyWalkman.icns */,
+				611A0BCF0A407E7000292A8D /* green.gif */,
+				611A0BD40A407F9000292A8D /* red.gif */,
+				61AFF1D20AFFC14500DF733F /* paypal.gif */,
+				6161B5300A414C290004C1C8 /* empty.m4a */,
+				257572D5072881A4000BE9CA /* Info.plist */,
+				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+				61EBDFE60BF7230000F1B405 /* Localizable.strings */,
+				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
+				65359356078DD41800E8BB2F /* AppleScriptKit.sdef */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		257572C3072881A4000BE9CA /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		257572C2072881A4000BE9CA /* iTuneMyWalkman */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4E71A80508A2C90C0034BBD9 /* Build configuration list for PBXNativeTarget "iTuneMyWalkman" */;
+			buildPhases = (
+				257572C3072881A4000BE9CA /* Headers */,
+				257572C4072881A4000BE9CA /* AppleScript */,
+				257572C6072881A4000BE9CA /* Resources */,
+				257572C9072881A4000BE9CA /* Sources */,
+				257572CB072881A4000BE9CA /* Frameworks */,
+				61E16A100C1705E1002C2303 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iTuneMyWalkman;
+			productInstallPath = "$(HOME)/Applications";
+			productName = iTuneMyWalkman;
+			productReference = 257572D6072881A4000BE9CA /* iTuneMyWalkman.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 4E71A80908A2C90C0034BBD9 /* Build configuration list for PBXProject "iTuneMyWalkman" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				Finnish,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* iTuneMyWalkman */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				257572C2072881A4000BE9CA /* iTuneMyWalkman */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		257572C6072881A4000BE9CA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				257572C7072881A4000BE9CA /* MainMenu.nib in Resources */,
+				257572C8072881A4000BE9CA /* InfoPlist.strings in Resources */,
+				61AF9939099A75BF008F708A /* iTuneMyWalkman.icns in Resources */,
+				61EBDFE70BF7230000F1B405 /* Localizable.strings in Resources */,
+				611A0BD00A407E7000292A8D /* green.gif in Resources */,
+				611A0BD50A407F9000292A8D /* red.gif in Resources */,
+				6161B5310A414C290004C1C8 /* empty.m4a in Resources */,
+				61AFF1D30AFFC14500DF733F /* paypal.gif in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		257572C9072881A4000BE9CA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				257572CA072881A4000BE9CA /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C165DFE840E0CC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		29B97318FDCFA39411CA2CEA /* MainMenu.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				29B97319FDCFA39411CA2CEA /* English */,
+			);
+			name = MainMenu.nib;
+			sourceTree = "<group>";
+		};
+		61EBDFE60BF7230000F1B405 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				61AF993D099A7672008F708A /* English */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4E71A80608A2C90C0034BBD9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = iTuneMyWalkman;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Debug;
+		};
+		4E71A80708A2C90C0034BBD9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_OSAFLAGS = "-x";
+				PRODUCT_NAME = iTuneMyWalkman;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		4E71A80A08A2C90C0034BBD9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Debug;
+		};
+		4E71A80B08A2C90C0034BBD9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4E71A80508A2C90C0034BBD9 /* Build configuration list for PBXNativeTarget "iTuneMyWalkman" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4E71A80608A2C90C0034BBD9 /* Debug */,
+				4E71A80708A2C90C0034BBD9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4E71A80908A2C90C0034BBD9 /* Build configuration list for PBXProject "iTuneMyWalkman" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4E71A80A08A2C90C0034BBD9 /* Debug */,
+				4E71A80B08A2C90C0034BBD9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}
