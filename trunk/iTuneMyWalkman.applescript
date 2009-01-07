@@ -529,7 +529,7 @@ on getsongs()
 	if debugging then tell me to log "m3upathprefix: " & m3upathprefix
 	if syncpodcasts then
 		tell application "iTunes"
-			set plists to every playlist whose special kind = Podcasts
+			set plists to a reference to (every playlist whose special kind = Podcasts)
 			repeat with plist in plists
 				if fixedpodcastfolder then
 					set playlistname to podcastfolder
@@ -537,7 +537,8 @@ on getsongs()
 					set playlistname to my strip(name of plist as string)
 				end if
 				set m3u to {}
-				repeat with x in (every file track of plist whose enabled = true)
+				set filetracks to (a reference to (every file track of plist whose enabled = true))
+				repeat with x in filetracks
 					set songfile to location of x
 					if songfile ≠ missing value and songfile is not in filelist then
 						tell application "Finder"
@@ -590,15 +591,12 @@ on getsongs()
 								if mydirlevel = 2 then -- two levels of folders
 									copy m3upathprefix & artistname & m3upathseparator & albumname & m3upathseparator to end of m3u
 									copy musicpath & artistname & "/" & albumname & "/" & songname to end of targetlist
-									set tmp to musicpath & artistname
-									if tmp is not in dirlist then copy tmp to end of dirlist
-									set tmp to musicpath & artistname & "/" & albumname
-									if tmp is not in dirlist then copy tmp to end of dirlist
+									copy musicpath & artistname to end of dirlist
+									copy musicpath & artistname & "/" & albumname to end of dirlist
 								else if mydirlevel = 1 then -- one folder level
 									copy m3upathprefix & albumname & m3upathseparator to end of m3u
 									copy musicpath & albumname & "/" & songname to end of targetlist
-									set tmp to musicpath & albumname
-									if tmp is not in dirlist then copy tmp to end of dirlist
+									copy musicpath & albumname to end of dirlist
 								else -- no folders
 									copy m3upathprefix to end of m3u
 									copy musicpath & songname to end of targetlist
@@ -631,7 +629,7 @@ on getsongs()
 	end if
 	if syncaudiobooks then
 		tell application "iTunes"
-			set plists to every playlist whose special kind = Audiobooks
+			set plists to a reference to (every playlist whose special kind = Audiobooks)
 			repeat with plist in plists
 				if fixedaudiobookfolder then
 					set playlistname to audiobookfolder
@@ -639,7 +637,8 @@ on getsongs()
 					set playlistname to my strip(name of plist as string)
 				end if
 				set m3u to {}
-				repeat with x in (every file track of plist whose enabled = true)
+				set filetracks to (a reference to (every file track of plist whose enabled = true))
+				repeat with x in filetracks
 					set songfile to location of x
 					if songfile ≠ missing value and songfile is not in filelist then
 						tell application "Finder"
@@ -692,15 +691,12 @@ on getsongs()
 								if mydirlevel = 2 then -- two levels of folders
 									copy m3upathprefix & artistname & m3upathseparator & albumname & m3upathseparator to end of m3u
 									copy musicpath & artistname & "/" & albumname & "/" & songname to end of targetlist
-									set tmp to musicpath & artistname
-									if tmp is not in dirlist then copy tmp to end of dirlist
-									set tmp to musicpath & artistname & "/" & albumname
-									if tmp is not in dirlist then copy tmp to end of dirlist
+									copy musicpath & artistname to end of dirlist
+									copy musicpath & artistname & "/" & albumname to end of dirlist
 								else if mydirlevel = 1 then -- one folder level
 									copy m3upathprefix & albumname & m3upathseparator to end of m3u
 									copy musicpath & albumname & "/" & songname to end of targetlist
-									set tmp to musicpath & albumname
-									if tmp is not in dirlist then copy tmp to end of dirlist
+									copy musicpath & albumname to end of dirlist
 								else -- no folders
 									copy m3upathprefix to end of m3u
 									copy musicpath & songname to end of targetlist
@@ -735,7 +731,8 @@ on getsongs()
 		if whichlists = 1 then
 			set plists to {}
 			tell application "iTunes"
-				repeat with x in every user playlist
+				set userplaylists to a reference to every user playlist
+				repeat with x in userplaylists
 					if (exists parent of x) and (name of parent of x begins with "iTuneMyWalkman" or name of parent of x begins with "iTMW") then
 						copy name of x to end of plists
 					end if
@@ -769,7 +766,8 @@ on getsongs()
 					if debugging then tell me to log "next playlist"
 					set playlistname to my strip(name of user playlist plist as string)
 					set m3u to {}
-					repeat with x in (every file track of user playlist plist whose enabled = true)
+					set filetracks to (a reference to (every file track of user playlist plist whose enabled = true))
+					repeat with x in filetracks
 						set songfile to location of x
 						if songfile ≠ missing value and songfile is not in filelist then
 							tell application "Finder"
@@ -820,15 +818,12 @@ on getsongs()
 									if mydirlevel = 2 then -- two levels of folders
 										copy m3upathprefix & artistname & m3upathseparator & albumname & m3upathseparator to end of m3u
 										copy musicpath & artistname & "/" & albumname & "/" & songname to end of targetlist
-										set tmp to musicpath & artistname
-										if tmp is not in dirlist then copy tmp to end of dirlist
-										set tmp to musicpath & artistname & "/" & albumname
-										if tmp is not in dirlist then copy tmp to end of dirlist
+										copy musicpath & artistname to end of dirlist
+										copy musicpath & artistname & "/" & albumname to end of dirlist
 									else if mydirlevel = 1 then -- one folder level
 										copy m3upathprefix & albumname & m3upathseparator to end of m3u
 										copy musicpath & albumname & "/" & songname to end of targetlist
-										set tmp to musicpath & albumname
-										if tmp is not in dirlist then copy tmp to end of dirlist
+										copy musicpath & albumname to end of dirlist
 									else -- no folders
 										copy m3upathprefix to end of m3u
 										copy musicpath & songname to end of targetlist
@@ -935,7 +930,8 @@ on putsongs()
 		set content of progress indicator "progressbar" to 0
 		update
 	end tell
-	repeat with x in dirlist
+	set dirlistref to a reference to dirlist
+	repeat with x in dirlistref
 		shellcmd("/bin/mkdir -p " & quoted form of x)
 	end repeat
 	set pos to 1
@@ -948,74 +944,90 @@ on copynext()
 	global copying, musicpath, pos, mydirlevel, mydirstruct, myincsync, myinccopy, filelist, songlist, targetlist, tracklist, encodelist, total, copied, copiedsize, notcopied
 	if copying ≠ true then
 		set copying to true
-		if pos ≤ total then
-			tell window "progress"
-				set content of text field "song" to item pos of songlist
-				update
-			end tell
-			set wasfound to true
-			try
-				shellcmd("/bin/test -f " & (quoted form of text 1 thru -4 of (item pos of targetlist)) & "*")
-			on error
-				set wasfound to false
-			end try
-			with timeout of 3600 seconds
-				if not wasfound then
-					if not item pos of encodelist then -- just copy
-						tell application "Finder" to set thesize to size of (item pos of filelist)
-						try
-							shellcmd("/bin/cp " & (quoted form of POSIX path of (item pos of filelist)) & " " & quoted form of item pos of targetlist)
-							set copied to copied + 1
-							if thesize ≠ missing value then set copiedsize to copiedsize + thesize
-							if myinccopy > 0 then
-								tell application "iTunes"
-									set played count of item pos of tracklist to (played count of item pos of tracklist) + myinccopy
-									set played date of item pos of tracklist to current date
-								end tell
-							end if
-						on error msg
-							log msg
-							set notcopied to notcopied + 1
-							shellcmd("/bin/rm -f " & quoted form of item pos of targetlist)
-						end try
-					else -- reencode, then copy
-						tell application "iTunes"
-							set encodedtracks to convert item pos of tracklist
-							set encodedfile to location of item 1 of encodedtracks
-						end tell
-						tell application "Finder" to set thesize to size of encodedfile
-						try
-							shellcmd("/bin/cp " & (quoted form of POSIX path of encodedfile) & " " & quoted form of item pos of targetlist)
-							set copied to copied + 1
-							if thesize ≠ missing value then set copiedsize to copiedsize + thesize
-							if myinccopy > 0 then
-								tell application "iTunes"
-									set played count of item pos of tracklist to (played count of item pos of tracklist) + myinccopy
-									set played date of item pos of tracklist to current date
-								end tell
-							end if
-						on error msg
-							log msg
-							set notcopied to notcopied + 1
-							shellcmd("/bin/rm -f " & quoted form of item pos of targetlist)
-						end try
-						tell application "iTunes" to delete item 1 of encodedtracks
-						shellcmd("/bin/rm -f " & quoted form of POSIX path of encodedfile)
+		try
+			if pos ≤ total then
+				tell window "progress"
+					set content of text field "song" to item pos of songlist
+					update
+				end tell
+				set wasfound to true
+				try
+					shellcmd("/bin/test -f " & (quoted form of text 1 thru -4 of (item pos of targetlist)) & "*")
+				on error
+					set wasfound to false
+				end try
+				with timeout of 3600 seconds
+					if not wasfound then
+						if not item pos of encodelist then -- just copy
+							tell application "Finder" to set thesize to size of (item pos of filelist)
+							try
+								shellcmd("/bin/cp " & (quoted form of POSIX path of (item pos of filelist)) & " " & quoted form of item pos of targetlist)
+								set copied to copied + 1
+								if thesize ≠ missing value then set copiedsize to copiedsize + thesize
+								if myinccopy > 0 then
+									tell application "iTunes"
+										set played count of item pos of tracklist to (played count of item pos of tracklist) + myinccopy
+										set played date of item pos of tracklist to current date
+									end tell
+								end if
+							on error msg
+								log msg
+								set notcopied to notcopied + 1
+								try
+									shellcmd("/bin/rm -f " & quoted form of item pos of targetlist)
+								on error msg2
+									log msg2
+								end try
+							end try
+						else -- reencode, then copy
+							tell application "iTunes"
+								set encodedtracks to convert item pos of tracklist
+								set encodedfile to location of item 1 of encodedtracks
+							end tell
+							tell application "Finder" to set thesize to size of encodedfile
+							try
+								shellcmd("/bin/cp " & (quoted form of POSIX path of encodedfile) & " " & quoted form of item pos of targetlist)
+								set copied to copied + 1
+								if thesize ≠ missing value then set copiedsize to copiedsize + thesize
+								if myinccopy > 0 then
+									tell application "iTunes"
+										set played count of item pos of tracklist to (played count of item pos of tracklist) + myinccopy
+										set played date of item pos of tracklist to current date
+									end tell
+								end if
+							on error msg
+								log msg
+								set notcopied to notcopied + 1
+								try
+									shellcmd("/bin/rm -f " & quoted form of item pos of targetlist)
+								on error msg2
+									log msg2
+								end try
+							end try
+							tell application "iTunes" to delete item 1 of encodedtracks
+							try
+								shellcmd("/bin/rm -f " & quoted form of POSIX path of encodedfile)
+							on error msg2
+								log msg2
+							end try
+						end if
+					else
+						if debugging then log "skipping " & item pos of songlist
 					end if
-				else
-					if debugging then log "skipping " & item pos of songlist
-				end if
-			end timeout
-			tell window "progress"
-				set content of progress indicator "progressbar" to pos
-				update
-			end tell
-			set pos to pos + 1
-		else
-			set stage to "finishing"
-			if debugging then tell me to log "not copied due to error: " & notcopied
-			cleanup()
-		end if
+				end timeout
+				tell window "progress"
+					set content of progress indicator "progressbar" to pos
+					update
+				end tell
+				set pos to pos + 1
+			else
+				set stage to "finishing"
+				if debugging then tell me to log "not copied due to error: " & notcopied
+				cleanup()
+			end if
+		on error msg
+			log msg
+		end try
 		set copying to false
 	else
 		if debugging then log "second idle thread ..."
@@ -1088,7 +1100,7 @@ on oldstrip(txt)
 end oldstrip
 
 on strip(newtext)
-	set illegalCharacters to {"<", ">", "?", "\"", ":", "|", "\\", "/", "*", "'"}
+	set illegalCharacters to {"<", ">", "?", "\"", ":", "|", "\\", "/", "*", "'", "(", ")"}
 	set ASTID to AppleScript's text item delimiters
 	repeat with thisChar in illegalCharacters
 		set AppleScript's text item delimiters to {thisChar}
@@ -1117,7 +1129,8 @@ end shellcmd
 
 on whattodo(filetype, bitrate)
 	global myencoder, myfiletypelimits
-	repeat with x in myfiletypelimits
+	set myfiletypelimitsref to a reference to myfiletypelimits
+	repeat with x in myfiletypelimitsref
 		if item 1 of x = filetype then
 			if myencoder ≠ 1 and bitrate > item 2 of x then
 				return 1 -- re-encode
@@ -1189,7 +1202,7 @@ on showprefs()
 			set content of text field "m3upathprefix" to contents of default entry "M3UPathPrefix" of user defaults of me
 			set chosenlists to contents of default entry "chosenPlaylists" of user defaults of me
 			set checkedlist to {}
-			tell application "iTunes" to set alllists to name of every user playlist
+			tell application "iTunes" to set alllists to a reference to name of every user playlist
 			repeat with x in alllists
 				if x is in chosenlists then
 					copy {true, x} to end of checkedlist
