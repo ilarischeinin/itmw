@@ -95,7 +95,10 @@ end should quit after last window closed
 -- If the copying of files where done within a single method, the application would be unresponsive to user interaction during that time.
 -- Instead, the stage property is set to copy, and files are copied individually from the idle handler.
 on idle theObject
-	if stage = "copy" then copynext()
+	set workdone to 0
+	repeat while stage = "copy" and workdone < 100
+		set workdone to workdone + 1 + 10 * (copynext())
+	end repeat
 	return 1
 end idle
 
@@ -468,13 +471,19 @@ on getsongs()
 		update
 	end tell
 	global musicpath, mydirlevel, mydirstruct, myincsync, myinccopy, myencoder, mybitrate, mysuffix, totalsize
-	global filelist, songlist, dirlist, targetlist, tracklist, encodelist
+	global filelist, filelistSrc, songlist, songlistSrc, dirlist, targetlist, targetlistSrc, tracklist, tracklistSrc, encodelist, encodelistSrc, existinglist, existinglistSrc
 	set blocksize to 8192
-	set filelist to {}
+	set filelistSrc to {}
+	set filelist to a reference to filelistSrc
 	set songlist to {}
-	set targetlist to {}
-	set tracklist to {}
-	set encodelist to {}
+	set targetlistSrc to {}
+	set targetlist to a reference to targetlistSrc
+	set existinglistSrc to {}
+	set existinglist to a reference to existinglistSrc
+	set tracklistSrc to {}
+	set tracklist to a reference to tracklistSrc
+	set encodelistSrc to {}
+	set encodelist to a reference to encodelistSrc
 	set m3u to {}
 	set totalsize to 0
 	set mysizelimit to contents of default entry "sizeLimit" of user defaults
@@ -894,7 +903,7 @@ on deleteolds()
 		set content of text field "status" to "Cleaning up memory card"
 		update
 	end tell
-	global musicpath, dirlist, targetlist, theexcludestring
+	global musicpath, dirlist, targetlist, theexcludestring, existinglist
 	set myexclude to contents of default entry "dontTouch" of user defaults
 	set excludestring to {}
 	repeat with x in myexclude
@@ -911,11 +920,16 @@ on deleteolds()
 	set fils to shellcmd("/usr/bin/find " & (quoted form of text 1 thru -2 of musicpath) & " -type f -not -iname " & (quoted form of "*.m3u") & excludestring)
 	repeat with x in every paragraph of fils
 		if x as string = "" then exit repeat
-		if x is not in targetlist then
+		-- if x is not in targetlist then
+		if x is in targetlist then
+			copy x as string to the end of existinglist
+		else
+			
 			if debugging then log "deleting unneeded file: " & x
 			shellcmd("/bin/rm -f " & quoted form of x)
 		end if
 	end repeat
+	if debugging then tell me to log "Existing:" & return & existinglist
 	if debugging then log "deleteolds ends"
 end deleteolds
 
@@ -936,12 +950,13 @@ on putsongs()
 	end repeat
 	set pos to 1
 	set stage to "copy"
-	idle {}
+	-- idle {}
 	if debugging then log "putsongs ends"
 end putsongs
 
 on copynext()
-	global copying, musicpath, pos, mydirlevel, mydirstruct, myincsync, myinccopy, filelist, songlist, targetlist, tracklist, encodelist, total, copied, copiedsize, notcopied
+	global copying, musicpath, pos, mydirlevel, mydirstruct, myincsync, myinccopy, filelist, songlist, targetlist, tracklist, encodelist, total, copied, copiedsize, notcopied, existinglist
+	set wasfound to true
 	if copying ≠ true then
 		set copying to true
 		try
@@ -950,12 +965,7 @@ on copynext()
 					set content of text field "song" to item pos of songlist
 					update
 				end tell
-				set wasfound to true
-				try
-					shellcmd("/bin/test -f " & (quoted form of text 1 thru -4 of (item pos of targetlist)) & "*")
-				on error
-					set wasfound to false
-				end try
+				set wasfound to (item pos of targetlist) is in existinglist
 				with timeout of 3600 seconds
 					if not wasfound then
 						if not item pos of encodelist then -- just copy
@@ -1031,6 +1041,11 @@ on copynext()
 		set copying to false
 	else
 		if debugging then log "second idle thread ..."
+	end if
+	if wasfound then
+		return 0
+	else
+		return 1
 	end if
 end copynext
 
