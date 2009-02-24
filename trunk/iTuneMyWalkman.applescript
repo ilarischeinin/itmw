@@ -540,99 +540,108 @@ on getsongs()
 		tell application "iTunes"
 			set plists to a reference to (every playlist whose special kind = Podcasts)
 			repeat with plist in plists
-				if fixedpodcastfolder then
-					set playlistname to podcastfolder
-				else
-					set playlistname to my strip(name of plist as string)
-				end if
 				set m3u to {}
-				set filetracks to (a reference to (every file track of plist whose enabled = true))
-				repeat with x in filetracks
-					set songfile to location of x
-					if songfile ≠ missing value and songfile is not in filelist then
-						tell application "Finder"
-							set songname to name of songfile as string
-							set suffix to "." & name extension of songfile as string
-							if renamem4btom4a and suffix = ".m4b" then
-								set songname to text 1 thru (-1 - (count suffix)) of songname
-								set suffix to ".m4a"
-								set songname to songname & suffix
-							end if
-						end tell
-						set howto to my whattodo(suffix, bit rate of x)
-						if howto > -1 then
-							if howto = 1 then
-								set filesize to (duration of x) * mybitrate * 125 -- 125 = 1000 / 8
-								set songname to text 1 thru (-1 - (count suffix)) of songname & mysuffix
-								set encoded to true
-							else
-								set filesize to contents of size of x
-								set encoded to false
-							end if
-							if mysizelimit = 0 or (totalsize + filesize ≤ mysizelimit) then
-								copy songfile to end of filelist
-								copy x to end of tracklist
-								if myincsync > 0 then
-									set played count of x to (played count of x) + myincsync
-									set played date of x to current date
-								end if
-								copy songname to end of songlist
-								set totalsize to totalsize + (filesize + blocksize - 1) div blocksize * blocksize
-								copy encoded to end of encodelist
-								set artistname to playlistname
-								if artistname = "" then set artistname to "Podcast"
-								if mydirstruct = 1 then -- artist/album/
-									set albumname to my strip(album of x as string)
-									if albumname = "" then set albumname to my strip(album artist of x as string)
-									if albumname = "" then set albumname to my strip(artist of x as string)
-									if albumname = "" then set albumname to artistname
-								else if mydirstruct = 2 then -- Music/playlist/
-									set albumname to my strip(album of x as string)
-									if albumname = "" then set albumname to my strip(album artist of x as string)
-									if albumname = "" then set albumname to my strip(artist of x as string)
-									if albumname = "" then set albumname to artistname
-								else -- iTuneMyWalkman/genre/
-									set albumname to my strip(album of x as string)
-									if albumname = "" then set albumname to my strip(album artist of x as string)
-									if albumname = "" then set albumname to my strip(artist of x as string)
-									if albumname = "" then set albumname to artistname
-								end if
-								if mydirlevel = 2 then -- two levels of folders
-									copy m3upathprefix & artistname & m3upathseparator & albumname & m3upathseparator to end of m3u
-									copy musicpath & artistname & "/" & albumname & "/" & songname to end of targetlist
-									copy musicpath & artistname to end of dirlist
-									copy musicpath & artistname & "/" & albumname to end of dirlist
-								else if mydirlevel = 1 then -- one folder level
-									copy m3upathprefix & albumname & m3upathseparator to end of m3u
-									copy musicpath & albumname & "/" & songname to end of targetlist
-									copy musicpath & albumname to end of dirlist
-								else -- no folders
-									copy m3upathprefix to end of m3u
-									copy musicpath & songname to end of targetlist
-								end if
-								copy songname & return & linefeed to end of m3u
-								if debugging then tell me to log "totalsize: " & totalsize
-							else
-								if debugging then tell me to log "no space left for " & songfile & " (needs " & filesize & ", only " & mysizelimit - totalsize & " available)"
-								if mysizelimit - totalsize ≤ 3 * 1024 * 1024 then exit repeat
-							end if
-						end if
+				try
+					if fixedpodcastfolder then
+						set playlistname to podcastfolder
+					else
+						set playlistname to my strip(name of plist as string)
 					end if
-				end repeat
-				if writem3uplaylists then
-					tell me
-						set m3u to m3u as string
-						set m3u to convertText(m3u, m3uencoding)
-						set fp to open for access (POSIX file (musicpath & playlistfolder & "/" & playlistname & ".m3u")) with write permission
-						set eof fp to 0
-						if m3uencoding = 1 then
-							write m3u to fp as «class utf8»
-						else
-							write m3u to fp
-						end if
-						close access fp
-					end tell
-				end if
+					set filetracks to (a reference to (every file track of plist whose enabled = true))
+					repeat with x in filetracks
+						try
+							copy x to currenttrack
+							copy location of x to songfile
+							if songfile ≠ missing value and songfile is not in filelist then
+								tell application "Finder"
+									set songname to name of songfile as string
+									set suffix to "." & name extension of songfile as string
+									if renamem4btom4a and suffix = ".m4b" then
+										set songname to text 1 thru (-1 - (count suffix)) of songname
+										set suffix to ".m4a"
+										set songname to songname & suffix
+									end if
+								end tell
+								set howto to my whattodo(suffix, bit rate of x)
+								if howto > -1 then
+									if howto = 1 then
+										set filesize to (duration of x) * mybitrate * 125 -- 125 = 1000 / 8
+										set songname to text 1 thru (-1 - (count suffix)) of songname & mysuffix
+										set encoded to true
+									else
+										set filesize to contents of size of x
+										set encoded to false
+									end if
+									if mysizelimit = 0 or (totalsize + filesize ≤ mysizelimit) then
+										if myincsync > 0 then
+											set played count of x to (played count of x) + myincsync
+											set played date of x to current date
+										end if
+										set totalsize to totalsize + (filesize + blocksize - 1) div blocksize * blocksize
+										set artistname to playlistname
+										if artistname = "" then set artistname to "Podcast"
+										if mydirstruct = 1 then -- artist/album/
+											set albumname to my strip(album of x as string)
+											if albumname = "" then set albumname to my strip(album artist of x as string)
+											if albumname = "" then set albumname to my strip(artist of x as string)
+											if albumname = "" then set albumname to artistname
+										else if mydirstruct = 2 then -- Music/playlist/
+											set albumname to my strip(album of x as string)
+											if albumname = "" then set albumname to my strip(album artist of x as string)
+											if albumname = "" then set albumname to my strip(artist of x as string)
+											if albumname = "" then set albumname to artistname
+										else -- iTuneMyWalkman/genre/
+											set albumname to my strip(album of x as string)
+											if albumname = "" then set albumname to my strip(album artist of x as string)
+											if albumname = "" then set albumname to my strip(artist of x as string)
+											if albumname = "" then set albumname to artistname
+										end if
+										if mydirlevel = 2 then -- two levels of folders
+											copy m3upathprefix & artistname & m3upathseparator & albumname & m3upathseparator to end of m3u
+											copy musicpath & artistname & "/" & albumname & "/" & songname to end of targetlist
+											copy musicpath & artistname to end of dirlist
+											copy musicpath & artistname & "/" & albumname to end of dirlist
+										else if mydirlevel = 1 then -- one folder level
+											copy m3upathprefix & albumname & m3upathseparator to end of m3u
+											copy musicpath & albumname & "/" & songname to end of targetlist
+											copy musicpath & albumname to end of dirlist
+										else -- no folders
+											copy m3upathprefix to end of m3u
+											copy musicpath & songname to end of targetlist
+										end if
+										copy songname & return & linefeed to end of m3u
+										copy songname to end of songlist
+										copy songfile to end of filelist
+										copy encoded to end of encodelist
+										copy currenttrack to end of tracklist
+										if debugging then tell me to log "totalsize: " & totalsize
+									else
+										if debugging then tell me to log "no space left for " & songfile & " (needs " & filesize & ", only " & mysizelimit - totalsize & " available)"
+										if mysizelimit - totalsize ≤ 3 * 1024 * 1024 then exit repeat
+									end if
+								end if
+							end if
+						on error msg
+							log msg
+						end try
+					end repeat
+					if writem3uplaylists then
+						tell me
+							set m3u to m3u as string
+							set m3u to convertText(m3u, m3uencoding)
+							set fp to open for access (POSIX file (musicpath & playlistfolder & "/" & playlistname & ".m3u")) with write permission
+							set eof fp to 0
+							if m3uencoding = 1 then
+								write m3u to fp as «class utf8»
+							else
+								write m3u to fp
+							end if
+							close access fp
+						end tell
+					end if
+				on error msg
+					log msg
+				end try
 			end repeat
 		end tell
 	end if
@@ -640,99 +649,108 @@ on getsongs()
 		tell application "iTunes"
 			set plists to a reference to (every playlist whose special kind = Audiobooks)
 			repeat with plist in plists
-				if fixedaudiobookfolder then
-					set playlistname to audiobookfolder
-				else
-					set playlistname to my strip(name of plist as string)
-				end if
 				set m3u to {}
-				set filetracks to (a reference to (every file track of plist whose enabled = true))
-				repeat with x in filetracks
-					set songfile to location of x
-					if songfile ≠ missing value and songfile is not in filelist then
-						tell application "Finder"
-							set songname to name of songfile as string
-							set suffix to "." & name extension of songfile as string
-							if renamem4btom4a and suffix = ".m4b" then
-								set songname to text 1 thru (-1 - (count suffix)) of songname
-								set suffix to ".m4a"
-								set songname to songname & suffix
-							end if
-						end tell
-						set howto to my whattodo(suffix, bit rate of x)
-						if howto > -1 then
-							if howto = 1 then
-								set filesize to (duration of x) * mybitrate * 125 -- 125 = 1000 / 8
-								set songname to text 1 thru (-1 - (count suffix)) of songname & mysuffix
-								set encoded to true
-							else
-								set filesize to contents of size of x
-								set encoded to false
-							end if
-							if mysizelimit = 0 or (totalsize + filesize ≤ mysizelimit) then
-								copy songfile to end of filelist
-								copy x to end of tracklist
-								if myincsync > 0 then
-									set played count of x to (played count of x) + myincsync
-									set played date of x to current date
-								end if
-								copy songname to end of songlist
-								set totalsize to totalsize + (filesize + blocksize - 1) div blocksize * blocksize
-								copy encoded to end of encodelist
-								set artistname to playlistname
-								if artistname = "" then set artistname to "Audiobooks"
-								if mydirstruct = 1 then -- artist/album/
-									set albumname to my strip(album of x as string)
-									if albumname = "" then set albumname to my strip(album artist of x as string)
-									if albumname = "" then set albumname to my strip(artist of x as string)
-									if albumname = "" then set albumname to artistname
-								else if mydirstruct = 2 then -- Music/playlist/
-									set albumname to my strip(album of x as string)
-									if albumname = "" then set albumname to my strip(album artist of x as string)
-									if albumname = "" then set albumname to my strip(artist of x as string)
-									if albumname = "" then set albumname to artistname
-								else -- iTuneMyWalkman/genre/
-									set albumname to my strip(album of x as string)
-									if albumname = "" then set albumname to my strip(album artist of x as string)
-									if albumname = "" then set albumname to my strip(artist of x as string)
-									if albumname = "" then set albumname to artistname
-								end if
-								if mydirlevel = 2 then -- two levels of folders
-									copy m3upathprefix & artistname & m3upathseparator & albumname & m3upathseparator to end of m3u
-									copy musicpath & artistname & "/" & albumname & "/" & songname to end of targetlist
-									copy musicpath & artistname to end of dirlist
-									copy musicpath & artistname & "/" & albumname to end of dirlist
-								else if mydirlevel = 1 then -- one folder level
-									copy m3upathprefix & albumname & m3upathseparator to end of m3u
-									copy musicpath & albumname & "/" & songname to end of targetlist
-									copy musicpath & albumname to end of dirlist
-								else -- no folders
-									copy m3upathprefix to end of m3u
-									copy musicpath & songname to end of targetlist
-								end if
-								copy songname & return & linefeed to end of m3u
-								if debugging then tell me to log "totalsize: " & totalsize
-							else
-								if debugging then tell me to log "no space left for " & songfile & " (needs " & filesize & ", only " & mysizelimit - totalsize & " available)"
-								if mysizelimit - totalsize ≤ 3 * 1024 * 1024 then exit repeat
-							end if
-						end if
+				try
+					if fixedaudiobookfolder then
+						set playlistname to audiobookfolder
+					else
+						set playlistname to my strip(name of plist as string)
 					end if
-				end repeat
-				if writem3uplaylists then
-					tell me
-						set m3u to m3u as string
-						set m3u to convertText(m3u, m3uencoding)
-						set fp to open for access (POSIX file (musicpath & playlistfolder & "/" & playlistname & ".m3u")) with write permission
-						set eof fp to 0
-						if m3uencoding = 1 then
-							write m3u to fp as «class utf8»
-						else
-							write m3u to fp
-						end if
-						close access fp
-					end tell
-				end if
+					set filetracks to (a reference to (every file track of plist whose enabled = true))
+					repeat with x in filetracks
+						try
+							copy x to currenttrack
+							copy location of x to songfile
+							if songfile ≠ missing value and songfile is not in filelist then
+								tell application "Finder"
+									set songname to name of songfile as string
+									set suffix to "." & name extension of songfile as string
+									if renamem4btom4a and suffix = ".m4b" then
+										set songname to text 1 thru (-1 - (count suffix)) of songname
+										set suffix to ".m4a"
+										set songname to songname & suffix
+									end if
+								end tell
+								set howto to my whattodo(suffix, bit rate of x)
+								if howto > -1 then
+									if howto = 1 then
+										set filesize to (duration of x) * mybitrate * 125 -- 125 = 1000 / 8
+										set songname to text 1 thru (-1 - (count suffix)) of songname & mysuffix
+										set encoded to true
+									else
+										set filesize to contents of size of x
+										set encoded to false
+									end if
+									if mysizelimit = 0 or (totalsize + filesize ≤ mysizelimit) then
+										if myincsync > 0 then
+											set played count of x to (played count of x) + myincsync
+											set played date of x to current date
+										end if
+										set totalsize to totalsize + (filesize + blocksize - 1) div blocksize * blocksize
+										set artistname to playlistname
+										if artistname = "" then set artistname to "Audiobooks"
+										if mydirstruct = 1 then -- artist/album/
+											set albumname to my strip(album of x as string)
+											if albumname = "" then set albumname to my strip(album artist of x as string)
+											if albumname = "" then set albumname to my strip(artist of x as string)
+											if albumname = "" then set albumname to artistname
+										else if mydirstruct = 2 then -- Music/playlist/
+											set albumname to my strip(album of x as string)
+											if albumname = "" then set albumname to my strip(album artist of x as string)
+											if albumname = "" then set albumname to my strip(artist of x as string)
+											if albumname = "" then set albumname to artistname
+										else -- iTuneMyWalkman/genre/
+											set albumname to my strip(album of x as string)
+											if albumname = "" then set albumname to my strip(album artist of x as string)
+											if albumname = "" then set albumname to my strip(artist of x as string)
+											if albumname = "" then set albumname to artistname
+										end if
+										if mydirlevel = 2 then -- two levels of folders
+											copy m3upathprefix & artistname & m3upathseparator & albumname & m3upathseparator to end of m3u
+											copy musicpath & artistname & "/" & albumname & "/" & songname to end of targetlist
+											copy musicpath & artistname to end of dirlist
+											copy musicpath & artistname & "/" & albumname to end of dirlist
+										else if mydirlevel = 1 then -- one folder level
+											copy m3upathprefix & albumname & m3upathseparator to end of m3u
+											copy musicpath & albumname & "/" & songname to end of targetlist
+											copy musicpath & albumname to end of dirlist
+										else -- no folders
+											copy m3upathprefix to end of m3u
+											copy musicpath & songname to end of targetlist
+										end if
+										copy songname & return & linefeed to end of m3u
+										copy songname to end of songlist
+										copy songfile to end of filelist
+										copy encoded to end of encodelist
+										copy currenttrack to end of tracklist
+										if debugging then tell me to log "totalsize: " & totalsize
+									else
+										if debugging then tell me to log "no space left for " & songfile & " (needs " & filesize & ", only " & mysizelimit - totalsize & " available)"
+										if mysizelimit - totalsize ≤ 3 * 1024 * 1024 then exit repeat
+									end if
+								end if
+							end if
+						on error msg
+							log msg
+						end try
+					end repeat
+					if writem3uplaylists then
+						tell me
+							set m3u to m3u as string
+							set m3u to convertText(m3u, m3uencoding)
+							set fp to open for access (POSIX file (musicpath & playlistfolder & "/" & playlistname & ".m3u")) with write permission
+							set eof fp to 0
+							if m3uencoding = 1 then
+								write m3u to fp as «class utf8»
+							else
+								write m3u to fp
+							end if
+							close access fp
+						end tell
+					end if
+				on error msg
+					log msg
+				end try
 			end repeat
 		end tell
 	end if
@@ -742,12 +760,16 @@ on getsongs()
 			tell application "iTunes"
 				set userplaylists to a reference to every user playlist
 				repeat with x in userplaylists
-					if (exists parent of x) and (name of parent of x begins with "iTuneMyWalkman" or name of parent of x begins with "iTMW") then
-						copy name of x to end of plists
-					end if
-					if special kind of x ≠ folder and (name of x begins with "iTuneMyWalkman" or name of x begins with "iTMW") then
-						copy name of x to end of plists
-					end if
+					try
+						if (exists parent of x) and (name of parent of x begins with "iTuneMyWalkman" or name of parent of x begins with "iTMW") then
+							copy name of x to end of plists
+						end if
+						if special kind of x ≠ folder and (name of x begins with "iTuneMyWalkman" or name of x begins with "iTMW") then
+							copy name of x to end of plists
+						end if
+					on error msg
+						log msg
+					end try
 				end repeat
 			end tell
 		else
@@ -769,105 +791,113 @@ on getsongs()
 		end repeat
 		tell application "iTunes"
 			set musicm3u to {}
-			set m3u to {}
 			repeat with plist in plists
-				if exists user playlist plist then
-					if debugging then tell me to log "next playlist"
-					set playlistname to my strip(name of user playlist plist as string)
-					set m3u to {}
-					set filetracks to (a reference to (every file track of user playlist plist whose enabled = true))
-					repeat with x in filetracks
-						set songfile to location of x
-						if songfile ≠ missing value and songfile is not in filelist then
-							tell application "Finder"
-								set songname to name of songfile as string
-								set suffix to "." & name extension of songfile as string
-								if renamem4btom4a and suffix = ".m4b" then
-									set songname to text 1 thru (-1 - (count suffix)) of songname
-									set suffix to ".m4a"
-									set songname to songname & suffix
+				set m3u to {}
+				try
+					if exists user playlist plist then
+						if debugging then tell me to log "next playlist"
+						set playlistname to my strip(name of user playlist plist as string)
+						set filetracks to (a reference to (every file track of user playlist plist whose enabled = true))
+						repeat with x in filetracks
+							try
+								copy x to currenttrack
+								copy location of x to songfile
+								if songfile ≠ missing value and songfile is not in filelist then
+									tell application "Finder"
+										set songname to name of songfile as string
+										set suffix to "." & name extension of songfile as string
+										if renamem4btom4a and suffix = ".m4b" then
+											set songname to text 1 thru (-1 - (count suffix)) of songname
+											set suffix to ".m4a"
+											set songname to songname & suffix
+										end if
+									end tell
+									set howto to my whattodo(suffix, bit rate of x)
+									if howto > -1 then
+										if howto = 1 then
+											set filesize to (duration of x) * mybitrate * 125 -- 125 = 1000 / 8
+											set songname to text 1 thru (-1 - (count suffix)) of songname & mysuffix
+											set encoded to true
+										else
+											set filesize to contents of size of x
+											set encoded to false
+										end if
+										if mysizelimit = 0 or (totalsize + filesize ≤ mysizelimit) then
+											if myincsync > 0 then
+												set played count of x to (played count of x) + myincsync
+												set played date of x to current date
+											end if
+											set totalsize to totalsize + (filesize + blocksize - 1) div blocksize * blocksize
+											if mydirstruct = 1 then -- artist/album/
+												set artistname to my strip(album artist of x as string)
+												if artistname = "" then set artistname to my strip(artist of x as string)
+												if artistname = "" then set artistname to localized string "Unknown Artist"
+												set albumname to my strip(album of x as string)
+												if albumname = "" then set albumname to localized string "Unknown Album"
+												set discnum to disc number of x
+												if discnum > 1 then set albumname to albumname & " " & discnum
+											else if mydirstruct = 2 then -- Music/playlist/
+												set artistname to "Music"
+												set albumname to playlistname
+											else -- iTuneMyWalkman/genre/
+												set artistname to "Music"
+												set albumname to my strip(genre of x as string)
+												if albumname = "" then set albumname to "Unknown Genre"
+											end if
+											if mydirlevel = 2 then -- two levels of folders
+												copy m3upathprefix & artistname & m3upathseparator & albumname & m3upathseparator to end of m3u
+												copy musicpath & artistname & "/" & albumname & "/" & songname to end of targetlist
+												copy musicpath & artistname to end of dirlist
+												copy musicpath & artistname & "/" & albumname to end of dirlist
+											else if mydirlevel = 1 then -- one folder level
+												copy m3upathprefix & albumname & m3upathseparator to end of m3u
+												copy musicpath & albumname & "/" & songname to end of targetlist
+												copy musicpath & albumname to end of dirlist
+											else -- no folders
+												copy m3upathprefix to end of m3u
+												copy musicpath & songname to end of targetlist
+											end if
+											copy songname & return & linefeed to end of m3u
+											copy songname to end of songlist
+											copy songfile to end of filelist
+											copy encoded to end of encodelist
+											copy currenttrack to end of tracklist
+											if debugging then tell me to log "totalsize: " & totalsize
+										else
+											if debugging then tell me to log "no space left for " & songfile & " (needs " & filesize & ", only " & mysizelimit - totalsize & " available)"
+											if mysizelimit - totalsize ≤ 3 * 1024 * 1024 then exit repeat
+										end if
+									end if
 								end if
+							on error msg
+								log msg
+							end try
+						end repeat
+						if writem3uplaylists then
+							tell me
+								if debugging then tell me to log "Writing " & POSIX file (musicpath & playlistfolder & "/" & playlistname & ".m3u")
+								set m3u to m3u as string
+								if debugging then tell me to log "converted to string"
+								set m3u to convertText(m3u, m3uencoding)
+								if debugging then tell me to log "adding to music.m3u"
+								copy m3u to end of musicm3u
+								if debugging then tell me to log "open"
+								set fp to open for access (POSIX file (musicpath & playlistfolder & "/" & playlistname & ".m3u")) with write permission
+								set eof fp to 0
+								if debugging then tell me to log "write"
+								if m3uencoding = 1 then
+									write m3u to fp as «class utf8»
+								else
+									write m3u to fp
+								end if
+								close access fp
 							end tell
-							set howto to my whattodo(suffix, bit rate of x)
-							if howto > -1 then
-								if howto = 1 then
-									set filesize to (duration of x) * mybitrate * 125 -- 125 = 1000 / 8
-									set songname to text 1 thru (-1 - (count suffix)) of songname & mysuffix
-									set encoded to true
-								else
-									set filesize to contents of size of x
-									set encoded to false
-								end if
-								if mysizelimit = 0 or (totalsize + filesize ≤ mysizelimit) then
-									copy songfile to end of filelist
-									copy x to end of tracklist
-									if myincsync > 0 then
-										set played count of x to (played count of x) + myincsync
-										set played date of x to current date
-									end if
-									copy songname to end of songlist
-									set totalsize to totalsize + (filesize + blocksize - 1) div blocksize * blocksize
-									copy encoded to end of encodelist
-									if mydirstruct = 1 then -- artist/album/
-										set artistname to my strip(album artist of x as string)
-										if artistname = "" then set artistname to my strip(artist of x as string)
-										if artistname = "" then set artistname to localized string "Unknown Artist"
-										set albumname to my strip(album of x as string)
-										if albumname = "" then set albumname to localized string "Unknown Album"
-										set discnum to disc number of x
-										if discnum > 1 then set albumname to albumname & " " & discnum
-									else if mydirstruct = 2 then -- Music/playlist/
-										set artistname to "Music"
-										set albumname to playlistname
-									else -- iTuneMyWalkman/genre/
-										set artistname to "Music"
-										set albumname to my strip(genre of x as string)
-										if albumname = "" then set albumname to "Unknown Genre"
-									end if
-									if mydirlevel = 2 then -- two levels of folders
-										copy m3upathprefix & artistname & m3upathseparator & albumname & m3upathseparator to end of m3u
-										copy musicpath & artistname & "/" & albumname & "/" & songname to end of targetlist
-										copy musicpath & artistname to end of dirlist
-										copy musicpath & artistname & "/" & albumname to end of dirlist
-									else if mydirlevel = 1 then -- one folder level
-										copy m3upathprefix & albumname & m3upathseparator to end of m3u
-										copy musicpath & albumname & "/" & songname to end of targetlist
-										copy musicpath & albumname to end of dirlist
-									else -- no folders
-										copy m3upathprefix to end of m3u
-										copy musicpath & songname to end of targetlist
-									end if
-									copy songname & return & linefeed to end of m3u
-									if debugging then tell me to log "totalsize: " & totalsize
-								else
-									if debugging then tell me to log "no space left for " & songfile & " (needs " & filesize & ", only " & mysizelimit - totalsize & " available)"
-									if mysizelimit - totalsize ≤ 3 * 1024 * 1024 then exit repeat
-								end if
-							end if
 						end if
-					end repeat
-					if writem3uplaylists then
-						tell me
-							if debugging then tell me to log "Writing " & POSIX file (musicpath & playlistfolder & "/" & playlistname & ".m3u")
-							set m3u to m3u as string
-							if debugging then tell me to log "converted to string"
-							set m3u to convertText(m3u, m3uencoding)
-							if debugging then tell me to log "adding to music.m3u"
-							copy m3u to end of musicm3u
-							if debugging then tell me to log "open"
-							set fp to open for access (POSIX file (musicpath & playlistfolder & "/" & playlistname & ".m3u")) with write permission
-							set eof fp to 0
-							if debugging then tell me to log "write"
-							if m3uencoding = 1 then
-								write m3u to fp as «class utf8»
-							else
-								write m3u to fp
-							end if
-							close access fp
-						end tell
 					end if
-				end if
-				if debugging then tell me to log "playlist finished"
+					if debugging then tell me to log "playlist finished"
+				on error msg
+					log msg
+				end try
 			end repeat
 			if writem3uplaylists then
 				tell me
