@@ -23,8 +23,9 @@ on copynext()
 on cleanup()
 -- HELPER FUNCTIONS
 on getpath(path)
-on strip(txt)
-on convertText()
+on strip(text, encoding)
+on convertText(text, encoding)
+on tcl(tclscript, arglist)
 on shellcmd(cmd)
 on whattodo(filetype, bitrate)
 on updateballs()
@@ -487,7 +488,7 @@ on getsongs()
 	set m3u to {}
 	set totalsize to 0
 	set mysizelimit to contents of default entry "sizeLimit" of user defaults
-	if mysizelimit < 0 then
+	if mysizelimit ≤ 0 then
 		tell application "Finder" to set mysizelimit to (free space of disk of folder (POSIX file musicpath as string)) + mysizelimit
 		if debugging then tell me to log "free space on disk: " & mysizelimit
 		--	Use the du (disk usage) command to subtract the potential size the music files to be removed.
@@ -503,6 +504,12 @@ on getsongs()
 		if debugging then tell me to log "space occupied by " & musicpath & ": " & musicpathsize
 		--	Add that size to the available size limit.
 		set mysizelimit to mysizelimit + musicpathsize
+		tell window "progress"
+			set content of progress indicator "progressbar" to 0
+			set maximum value of progress indicator "progressbar" to mysizelimit
+			set indeterminate of progress indicator "progressbar" to false
+			update
+		end tell
 	end if
 	if debugging then tell me to log "size limit: " & mysizelimit
 	copy contents of default entry "renameM4BToM4A" of user defaults to renamem4btom4a
@@ -514,11 +521,11 @@ on getsongs()
 	copy contents of default entry "M3UEncoding" of user defaults to m3uencoding
 	copy contents of default entry "M3UPathPrefix" of user defaults to m3upathprefix
 	copy contents of default entry "M3UPathSeparator" of user defaults to m3upathseparator
-	copy my strip(contents of default entry "playlistfolder" of user defaults) to playlistfolder
+	copy my strip(contents of default entry "playlistfolder" of user defaults, m3uencoding) to playlistfolder
 	copy contents of default entry "fixedPodcastFolder" of user defaults to fixedpodcastfolder
-	copy my strip(contents of default entry "podcastFolder" of user defaults) to podcastfolder
+	copy my strip(contents of default entry "podcastFolder" of user defaults, m3uencoding) to podcastfolder
 	copy contents of default entry "fixedAudiobookFolder" of user defaults to fixedaudiobookfolder
-	copy my strip(contents of default entry "audiobookFolder" of user defaults) to audiobookfolder
+	copy my strip(contents of default entry "audiobookFolder" of user defaults, m3uencoding) to audiobookfolder
 	--	"E:/music/" and "E:/music", otherwise deleteolds() will delete "E:/music"
 	set dirlist to {musicpath, text 1 thru -2 of musicpath}
 	if writem3uplaylists then
@@ -545,7 +552,7 @@ on getsongs()
 					if fixedpodcastfolder then
 						set playlistname to podcastfolder
 					else
-						set playlistname to my strip(name of plist as string)
+						set playlistname to my strip(name of plist as string, m3uencoding)
 					end if
 					set filetracks to (a reference to (every file track of plist whose enabled = true))
 					repeat with x in filetracks
@@ -577,23 +584,22 @@ on getsongs()
 											set played count of x to (played count of x) + myincsync
 											set played date of x to current date
 										end if
-										set totalsize to totalsize + (filesize + blocksize - 1) div blocksize * blocksize
 										set artistname to playlistname
 										if artistname = "" then set artistname to "Podcast"
 										if mydirstruct = 1 then -- artist/album/
-											set albumname to my strip(album of x as string)
-											if albumname = "" then set albumname to my strip(album artist of x as string)
-											if albumname = "" then set albumname to my strip(artist of x as string)
+											set albumname to my strip(album of x as string, m3uencoding)
+											if albumname = "" then set albumname to my strip(album artist of x as string, m3uencoding)
+											if albumname = "" then set albumname to my strip(artist of x as string, m3uencoding)
 											if albumname = "" then set albumname to artistname
 										else if mydirstruct = 2 then -- Music/playlist/
-											set albumname to my strip(album of x as string)
-											if albumname = "" then set albumname to my strip(album artist of x as string)
-											if albumname = "" then set albumname to my strip(artist of x as string)
+											set albumname to my strip(album of x as string, m3uencoding)
+											if albumname = "" then set albumname to my strip(album artist of x as string, m3uencoding)
+											if albumname = "" then set albumname to my strip(artist of x as string, m3uencoding)
 											if albumname = "" then set albumname to artistname
 										else -- iTuneMyWalkman/genre/
-											set albumname to my strip(album of x as string)
-											if albumname = "" then set albumname to my strip(album artist of x as string)
-											if albumname = "" then set albumname to my strip(artist of x as string)
+											set albumname to my strip(album of x as string, m3uencoding)
+											if albumname = "" then set albumname to my strip(album artist of x as string, m3uencoding)
+											if albumname = "" then set albumname to my strip(artist of x as string, m3uencoding)
 											if albumname = "" then set albumname to artistname
 										end if
 										if mydirlevel = 2 then -- two levels of folders
@@ -614,7 +620,11 @@ on getsongs()
 										copy songfile to end of filelist
 										copy encoded to end of encodelist
 										copy currenttrack to end of tracklist
-										if debugging then tell me to log "totalsize: " & totalsize
+										set totalsize to totalsize + (filesize + blocksize - 1) div blocksize * blocksize
+										tell window "progress" of application "iTuneMyWalkman"
+											set content of progress indicator "progressbar" to totalsize
+											update
+										end tell
 									else
 										if debugging then tell me to log "no space left for " & songfile & " (needs " & filesize & ", only " & mysizelimit - totalsize & " available)"
 										if mysizelimit - totalsize ≤ 3 * 1024 * 1024 then exit repeat
@@ -654,7 +664,7 @@ on getsongs()
 					if fixedaudiobookfolder then
 						set playlistname to audiobookfolder
 					else
-						set playlistname to my strip(name of plist as string)
+						set playlistname to my strip(name of plist as string, m3uencoding)
 					end if
 					set filetracks to (a reference to (every file track of plist whose enabled = true))
 					repeat with x in filetracks
@@ -686,23 +696,22 @@ on getsongs()
 											set played count of x to (played count of x) + myincsync
 											set played date of x to current date
 										end if
-										set totalsize to totalsize + (filesize + blocksize - 1) div blocksize * blocksize
 										set artistname to playlistname
 										if artistname = "" then set artistname to "Audiobooks"
 										if mydirstruct = 1 then -- artist/album/
-											set albumname to my strip(album of x as string)
-											if albumname = "" then set albumname to my strip(album artist of x as string)
-											if albumname = "" then set albumname to my strip(artist of x as string)
+											set albumname to my strip(album of x as string, m3uencoding)
+											if albumname = "" then set albumname to my strip(album artist of x as string, m3uencoding)
+											if albumname = "" then set albumname to my strip(artist of x as string, m3uencoding)
 											if albumname = "" then set albumname to artistname
 										else if mydirstruct = 2 then -- Music/playlist/
-											set albumname to my strip(album of x as string)
-											if albumname = "" then set albumname to my strip(album artist of x as string)
-											if albumname = "" then set albumname to my strip(artist of x as string)
+											set albumname to my strip(album of x as string, m3uencoding)
+											if albumname = "" then set albumname to my strip(album artist of x as string, m3uencoding)
+											if albumname = "" then set albumname to my strip(artist of x as string, m3uencoding)
 											if albumname = "" then set albumname to artistname
 										else -- iTuneMyWalkman/genre/
-											set albumname to my strip(album of x as string)
-											if albumname = "" then set albumname to my strip(album artist of x as string)
-											if albumname = "" then set albumname to my strip(artist of x as string)
+											set albumname to my strip(album of x as string, m3uencoding)
+											if albumname = "" then set albumname to my strip(album artist of x as string, m3uencoding)
+											if albumname = "" then set albumname to my strip(artist of x as string, m3uencoding)
 											if albumname = "" then set albumname to artistname
 										end if
 										if mydirlevel = 2 then -- two levels of folders
@@ -723,7 +732,11 @@ on getsongs()
 										copy songfile to end of filelist
 										copy encoded to end of encodelist
 										copy currenttrack to end of tracklist
-										if debugging then tell me to log "totalsize: " & totalsize
+										set totalsize to totalsize + (filesize + blocksize - 1) div blocksize * blocksize
+										tell window "progress" of application "iTuneMyWalkman"
+											set content of progress indicator "progressbar" to totalsize
+											update
+										end tell
 									else
 										if debugging then tell me to log "no space left for " & songfile & " (needs " & filesize & ", only " & mysizelimit - totalsize & " available)"
 										if mysizelimit - totalsize ≤ 3 * 1024 * 1024 then exit repeat
@@ -758,7 +771,7 @@ on getsongs()
 		if whichlists = 1 then
 			set plists to {}
 			tell application "iTunes"
-				set userplaylists to a reference to every user playlist
+				set userplaylists to a reference to (every user playlist)
 				repeat with x in userplaylists
 					try
 						if (exists parent of x) and (name of parent of x begins with "iTuneMyWalkman" or name of parent of x begins with "iTMW") then
@@ -796,7 +809,7 @@ on getsongs()
 				try
 					if exists user playlist plist then
 						if debugging then tell me to log "next playlist"
-						set playlistname to my strip(name of user playlist plist as string)
+						set playlistname to my strip(name of user playlist plist as string, m3uencoding)
 						set filetracks to (a reference to (every file track of user playlist plist whose enabled = true))
 						repeat with x in filetracks
 							try
@@ -827,12 +840,11 @@ on getsongs()
 												set played count of x to (played count of x) + myincsync
 												set played date of x to current date
 											end if
-											set totalsize to totalsize + (filesize + blocksize - 1) div blocksize * blocksize
 											if mydirstruct = 1 then -- artist/album/
-												set artistname to my strip(album artist of x as string)
-												if artistname = "" then set artistname to my strip(artist of x as string)
+												set artistname to my strip(album artist of x as string, m3uencoding)
+												if artistname = "" then set artistname to my strip(artist of x as string, m3uencoding)
 												if artistname = "" then set artistname to localized string "Unknown Artist"
-												set albumname to my strip(album of x as string)
+												set albumname to my strip(album of x as string, m3uencoding)
 												if albumname = "" then set albumname to localized string "Unknown Album"
 												set discnum to disc number of x
 												if discnum > 1 then set albumname to albumname & " " & discnum
@@ -841,7 +853,7 @@ on getsongs()
 												set albumname to playlistname
 											else -- iTuneMyWalkman/genre/
 												set artistname to "Music"
-												set albumname to my strip(genre of x as string)
+												set albumname to my strip(genre of x as string, m3uencoding)
 												if albumname = "" then set albumname to "Unknown Genre"
 											end if
 											if mydirlevel = 2 then -- two levels of folders
@@ -862,7 +874,11 @@ on getsongs()
 											copy songfile to end of filelist
 											copy encoded to end of encodelist
 											copy currenttrack to end of tracklist
-											if debugging then tell me to log "totalsize: " & totalsize
+											set totalsize to totalsize + (filesize + blocksize - 1) div blocksize * blocksize
+											tell window "progress" of application "iTuneMyWalkman"
+												set content of progress indicator "progressbar" to totalsize
+												update
+											end tell
 										else
 											if debugging then tell me to log "no space left for " & songfile & " (needs " & filesize & ", only " & mysizelimit - totalsize & " available)"
 											if mysizelimit - totalsize ≤ 3 * 1024 * 1024 then exit repeat
@@ -917,6 +933,7 @@ on getsongs()
 	end if
 	if debugging then
 		set ASTID to AppleScript's text item delimiters
+		set AppleScript's text item delimiters to return
 		tell me
 			log "filelist: " & return & filelist
 			log "targetlist: " & return & targetlist
@@ -931,6 +948,8 @@ on deleteolds()
 	if debugging then log "deleteolds begins"
 	tell window "progress"
 		set content of text field "status" to "Cleaning up memory card"
+		set content of progress indicator "progressbar" to 0
+		set indeterminate of progress indicator "progressbar" to true
 		update
 	end tell
 	global musicpath, dirlist, targetlist, theexcludestring, existinglist
@@ -940,24 +959,50 @@ on deleteolds()
 		if x as string ≠ "" then copy " -not -iname " & (quoted form of x) & " -not -ipath " & quoted form of ("*/" & x & "/*") to end of excludestring
 	end repeat
 	set dirs to shellcmd("/usr/bin/find " & (quoted form of text 1 thru -2 of musicpath) & " -type d" & excludestring)
+	set counter to 0
+	tell window "progress"
+		set maximum value of progress indicator "progressbar" to (count of paragraphs of dirs) * 2
+		set indeterminate of progress indicator "progressbar" to false
+		update
+	end tell
 	repeat with x in every paragraph of dirs
 		if x as string = "" then exit repeat
 		if x is not in dirlist then
 			if debugging then log "deleting unneeded directory: " & x
 			shellcmd("/bin/rm -rf " & quoted form of x)
 		end if
+		set counter to counter + 1
+		tell window "progress"
+			set content of progress indicator "progressbar" to counter
+			update
+		end tell
 	end repeat
+	tell window "progress"
+		set content of progress indicator "progressbar" to 0
+		set indeterminate of progress indicator "progressbar" to true
+		update
+	end tell
 	set fils to shellcmd("/usr/bin/find " & (quoted form of text 1 thru -2 of musicpath) & " -type f -not -iname " & (quoted form of "*.m3u") & excludestring)
+	set counter to (count of paragraphs of fils)
+	tell window "progress"
+		set maximum value of progress indicator "progressbar" to counter * 2
+		set content of progress indicator "progressbar" to counter
+		set indeterminate of progress indicator "progressbar" to false
+		update
+	end tell
 	repeat with x in every paragraph of fils
 		if x as string = "" then exit repeat
-		-- if x is not in targetlist then
 		if x is in targetlist then
 			copy x as string to the end of existinglist
 		else
-			
 			if debugging then log "deleting unneeded file: " & x
 			shellcmd("/bin/rm -f " & quoted form of x)
 		end if
+		set counter to counter + 1
+		tell window "progress"
+			set content of progress indicator "progressbar" to counter
+			update
+		end tell
 	end repeat
 	if debugging then tell me to log "Existing:" & return & existinglist
 	if debugging then log "deleteolds ends"
@@ -974,13 +1019,8 @@ on putsongs()
 		set content of progress indicator "progressbar" to 0
 		update
 	end tell
-	set dirlistref to a reference to dirlist
-	repeat with x in dirlistref
-		shellcmd("/bin/mkdir -p " & quoted form of x)
-	end repeat
 	set pos to 1
 	set stage to "copy"
-	-- idle {}
 	if debugging then log "putsongs ends"
 end putsongs
 
@@ -1001,7 +1041,7 @@ on copynext()
 						if not item pos of encodelist then -- just copy
 							tell application "Finder" to set thesize to size of (item pos of filelist)
 							try
-								shellcmd("/bin/cp " & (quoted form of POSIX path of (item pos of filelist)) & " " & quoted form of item pos of targetlist)
+								shellcmd("target=" & quoted form of item pos of targetlist & "; /bin/mkdir -p \"${target%/*}\"; /bin/cp " & (quoted form of POSIX path of (item pos of filelist)) & " \"$target\"")
 								set copied to copied + 1
 								if thesize ≠ missing value then set copiedsize to copiedsize + thesize
 								if myinccopy > 0 then
@@ -1136,36 +1176,31 @@ on getpath(path)
 	return dir
 end getpath
 
-on oldstrip(txt)
-	try
-		return shellcmd("/bin/echo " & quoted form of txt & " | /usr/bin/sed " & quoted form of "s/[<>?\":|\\/*]//g")
-	on error msg
-		display dialog msg
-	end try
-end oldstrip
-
-on strip(newtext)
-	set illegalCharacters to {"<", ">", "?", "\"", ":", "|", "\\", "/", "*", "'", "(", ")"}
-	set ASTID to AppleScript's text item delimiters
-	repeat with thisChar in illegalCharacters
-		set AppleScript's text item delimiters to {thisChar}
-		set newtext to text items of newtext
-		set AppleScript's text item delimiters to ""
-		set newtext to newtext as Unicode text
-	end repeat
-	set AppleScript's text item delimiters to ASTID
-	return newtext
+on strip(theText, encoding)
+	if encoding = 1 or theText = "" then
+		return theText
+	else if encoding = 2 then
+		return tcl("strip.tcl", {"iso8859-1", theText})
+	end if
 end strip
 
 on convertText(theText, encoding)
-	if encoding is not 1 then
-		set encodingscript to quoted form of POSIX path of ((path to me) & "Contents:Resources:encoding.tcl" as string)
-		if encoding = 2 then
-			return shellcmd("/usr/bin/tclsh " & encodingscript & " iso8859-1 " & quoted form of theText)
-		end if
+	if encoding = 1 or theText = "" then
+		return theText
+	else if encoding = 2 then
+		return tcl("encoding.tcl", {"iso88959-1", theText})
 	end if
-	return theText
 end convertText
+
+on tcl(tclscript, arglist)
+	set args to ""
+	repeat with arg in arglist
+		set args to args & " " & quoted form of arg
+	end repeat
+	if debugging then log "Running tcl script: " & tclscript & args
+	set tclscript to quoted form of POSIX path of ((path to me) & "Contents:Resources:" & tclscript as string)
+	tell me to return do shell script "/usr/bin/tclsh " & tclscript & args
+end tcl
 
 on shellcmd(cmd)
 	if debugging then log "Running shell command: " & cmd
@@ -1360,17 +1395,17 @@ on checkforold()
 		tell me to close window "main"
 		return
 	end if
-	set thecmd to {}
-	copy "rm -rf " & quoted form of POSIX path of ((path to library folder from local domain as string) & "iTunes:Scripts:iTMW - Synchronize.scpt") to end of thecmd
-	copy "; rm -rf " & quoted form of POSIX path of ((path to library folder from local domain as string) & "iTunes:Scripts:iTMW - Set Size Limit.scpt") to end of thecmd
-	copy "; rm -rf " & quoted form of POSIX path of ((path to library folder from local domain as string) & "iTunes:Scripts:iTMW - Preferences.scpt") to end of thecmd
-	copy "; rm -rf " & quoted form of POSIX path of ((path to library folder from local domain as string) & "iTunes:Scripts:iTMW - Increment Play Count.scpt") to end of thecmd
-	copy "; rm -rf " & quoted form of POSIX path of ((path to library folder from local domain as string) & "iTunes:Scripts:iTMW - Check for New Version.scpt") to end of thecmd
-	copy "; rm -rf " & quoted form of POSIX path of ((path to library folder from local domain as string) & "iTunes:Scripts:iTMW - Unmount Phone.scpt") to end of thecmd
-	copy "; rm -rf " & quoted form of POSIX path of ((path to application support from local domain as string) & "iTuneMyWalkman:") to end of thecmd
-	copy "; rm -rf " & quoted form of POSIX path of ((path to Folder Action scripts from local domain as string) & "iTMW - Detect Phone.scpt") to end of thecmd
-	copy "; rm -rf " & quoted form of POSIX path of ((path to library folder from local domain as string) & "Receipts:iTuneMyWalkman.pkg") to end of thecmd
-	do shell script "/bin/sh -c " & quoted form of thecmd with administrator privileges
+	set thecmd to {"/bin/rm -rf"}
+	copy " " & quoted form of POSIX path of ((path to application support from local domain as string) & "iTuneMyWalkman:") to end of thecmd
+	copy " " & quoted form of POSIX path of ((path to Folder Action scripts from local domain as string) & "iTMW - Detect Phone.scpt") to end of thecmd
+	copy " " & quoted form of POSIX path of ((path to library folder from local domain as string) & "iTunes:Scripts:iTMW - Synchronize.scpt") to end of thecmd
+	copy " " & quoted form of POSIX path of ((path to library folder from local domain as string) & "iTunes:Scripts:iTMW - Set Size Limit.scpt") to end of thecmd
+	copy " " & quoted form of POSIX path of ((path to library folder from local domain as string) & "iTunes:Scripts:iTMW - Preferences.scpt") to end of thecmd
+	copy " " & quoted form of POSIX path of ((path to library folder from local domain as string) & "iTunes:Scripts:iTMW - Increment Play Count.scpt") to end of thecmd
+	copy " " & quoted form of POSIX path of ((path to library folder from local domain as string) & "iTunes:Scripts:iTMW - Check for New Version.scpt") to end of thecmd
+	copy " " & quoted form of POSIX path of ((path to library folder from local domain as string) & "iTunes:Scripts:iTMW - Unmount Phone.scpt") to end of thecmd
+	copy " " & quoted form of POSIX path of ((path to library folder from local domain as string) & "Receipts:iTuneMyWalkman.pkg") to end of thecmd
+	shellcmd(thecmd)
 	try
 		tell application "System Events" to remove action from folder "Volumes" of startup disk using action name "iTMW - Detect Phone.scpt"
 	end try
