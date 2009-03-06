@@ -615,7 +615,9 @@ on getsongs()
 											copy m3upathprefix to end of m3u
 											copy musicpath & songname to end of targetlist
 										end if
-										copy songname & return & linefeed to end of m3u
+										-- copy songname & return & linefeed to end of m3u
+										-- the "linefeed" constant came with Leopard and is not available in Tiger, so we use this instead:
+										copy songname & return & (ASCII character 10) to end of m3u
 										copy songname to end of songlist
 										copy songfile to end of filelist
 										copy encoded to end of encodelist
@@ -727,7 +729,9 @@ on getsongs()
 											copy m3upathprefix to end of m3u
 											copy musicpath & songname to end of targetlist
 										end if
-										copy songname & return & linefeed to end of m3u
+										-- copy songname & return & linefeed to end of m3u
+										-- the "linefeed" constant came with Leopard and is not available in Tiger, so we use this instead:
+										copy songname & return & (ASCII character 10) to end of m3u
 										copy songname to end of songlist
 										copy songfile to end of filelist
 										copy encoded to end of encodelist
@@ -869,7 +873,9 @@ on getsongs()
 												copy m3upathprefix to end of m3u
 												copy musicpath & songname to end of targetlist
 											end if
-											copy songname & return & linefeed to end of m3u
+											-- copy songname & return & linefeed to end of m3u
+											-- the "linefeed" constant came with Leopard and is not available in Tiger, so we use this instead:
+											copy songname & return & (ASCII character 10) to end of m3u
 											copy songname to end of songlist
 											copy songfile to end of filelist
 											copy encoded to end of encodelist
