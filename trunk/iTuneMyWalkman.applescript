@@ -409,37 +409,46 @@ on movepics(myprocess)
 	end if
 	if fils = {} then return
 	if myprocess = 3 then -- iPhoto
-		tell application "Finder" to set hasiphoto to exists application file id "com.apple.iPhoto"
-		if hasiphoto then tell application "Finder" to set iphoto to name of application file id "com.apple.iPhoto"
-		considering numeric strings
-			if not hasiphoto or version of application iphoto < "6" then
-				using terms from application "System Events"
-					display alert (localized string "iPhoto 6") buttons {localized string "OK"} default button 1
+		-- Using a try block to see if that allows the program to run on a computer without iPhoto.
+		-- I doubt it will help, so we might need to use this kind of syntax to mask iPhoto:
+		-- do shell script "osascript -e 'tell application \"iPhoto\" ... '"
+		try
+			tell application "Finder" to set hasiphoto to exists application file id "com.apple.iPhoto"
+			if hasiphoto then
+				tell application "Finder" to set iphoto to name of application file id "com.apple.iPhoto"
+				considering numeric strings
+					if not hasiphoto or version of application iphoto < "6" then
+						using terms from application "System Events"
+							display alert (localized string "iPhoto 6") buttons {localized string "OK"} default button 1
+						end using terms from
+						return
+					end if
+				end considering
+				using terms from application "iPhoto"
+					tell application iphoto
+						import from importlist
+						repeat while importing
+							delay 1
+						end repeat
+						set imported to count photos of last rolls album
+					end tell
 				end using terms from
-				return
-			end if
-		end considering
-		using terms from application "iPhoto"
-			tell application iphoto
-				import from importlist
-				repeat while importing
-					delay 1
+				set num to count importlist
+				if imported ≠ num then
+					set sure to display dialog "iTuneMyWalkman tried to import " & num & " items to iPhoto, but your last rolls album contains " & imported & " pictures. Should iTuneMyWalkman delete the files from the memory stick or not?" buttons {localized string "Delete", localized string "Keep Files"}
+					if button returned of sure = (localized string "Keep Files") then return
+				end if
+				repeat with x in fils
+					if s60thumbs then
+						shellcmd("/bin/rm -rf " & (quoted form of x) & "*")
+					else
+						shellcmd("/bin/rm -rf " & quoted form of x)
+					end if
 				end repeat
-				set imported to count photos of last rolls album
-			end tell
-		end using terms from
-		set num to count importlist
-		if imported ≠ num then
-			set sure to display dialog "iTuneMyWalkman tried to import " & num & " items to iPhoto, but your last rolls album contains " & imported & " pictures. Should iTuneMyWalkman delete the files from the memory stick or not?" buttons {localized string "Delete", localized string "Keep Files"}
-			if button returned of sure = (localized string "Keep Files") then return
-		end if
-		repeat with x in fils
-			if s60thumbs then
-				shellcmd("/bin/rm -rf " & (quoted form of x) & "*")
-			else
-				shellcmd("/bin/rm -rf " & quoted form of x)
 			end if
-		end repeat
+		on error msg
+			log "Error trying to import to iPhoto: " & msg
+		end try
 	else
 		set mymovepath to contents of default entry "moveImagesTo" of user defaults
 		if mymovepath ≠ "notfound" and mymovepath ≠ "ambiguous" then
@@ -1145,7 +1154,7 @@ on cleanup()
 	if mydone = 2 then -- Ask
 		using terms from application "System Events"
 			set themessage to localized string "Copied" & " " & copied & " / " & total & " " & (localized string "tracks" & " (" & (copiedsize * 10 / 1024 div 1024 / 10) & " " & (localized string "MB" & " / " & (totalsize * 10 / 1024 div 1024 / 10) & " " & (localized string "MB" & ")")))
-			if notcopied ≠ 0 then copy return & (localized string "Warning" & ": " & notcopied & " " & (localized string "files could not be copied.")) to end of themessage
+			if notcopied ≠ 0 then set themessage to themessage & return & (localized string "Warning" & ": " & notcopied & " " & (localized string "files could not be copied."))
 			set unmount to button returned of (display alert (localized string "complete") message themessage buttons {localized string "Don't Unmount", localized string "Unmount"})
 			if unmount = (localized string "Unmount") then
 				tell application "Finder" to eject disk of folder (POSIX file musicpath as string)
