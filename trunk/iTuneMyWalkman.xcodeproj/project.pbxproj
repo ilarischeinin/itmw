@@ -45,6 +45,7 @@
 		61E16A120C170613002C2303 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 61E169FB0C1705A3002C2303 /* Sparkle.framework */; };
 		61EBDFE70BF7230000F1B405 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 61EBDFE60BF7230000F1B405 /* Localizable.strings */; };
 		F8D0766B0ECF5043007828DD /* encoding.tcl in Resources */ = {isa = PBXBuildFile; fileRef = F87B6F4F0ECF082D0092D733 /* encoding.tcl */; };
+		F8FC20590F54AC590036C5E9 /* strip.tcl in Resources */ = {isa = PBXBuildFile; fileRef = F8FC20420F54A80A0036C5E9 /* strip.tcl */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -85,6 +86,7 @@
 		DA206CF1015C4E2903C91932 /* AppleScriptKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppleScriptKit.framework; path = /System/Library/Frameworks/AppleScriptKit.framework; sourceTree = "<absolute>"; };
 		DA206CF3015C4E8B03C91932 /* iTuneMyWalkman.applescript */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.applescript; path = iTuneMyWalkman.applescript; sourceTree = "<group>"; };
 		F87B6F4F0ECF082D0092D733 /* encoding.tcl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = encoding.tcl; sourceTree = "<group>"; };
+		F8FC20420F54A80A0036C5E9 /* strip.tcl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = strip.tcl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 				61AF992E099A759A008F708A /* iTMW - Synchronize.applescript */,
 				61AF992F099A759A008F708A /* iTMW - Unmount Phone.applescript */,
 				F87B6F4F0ECF082D0092D733 /* encoding.tcl */,
+				F8FC20420F54A80A0036C5E9 /* strip.tcl */,
 			);
 			name = Scripts;
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 				61AF9939099A75BF008F708A /* iTuneMyWalkman.icns in Resources */,
 				61EBDFE70BF7230000F1B405 /* Localizable.strings in Resources */,
 				F8D0766B0ECF5043007828DD /* encoding.tcl in Resources */,
+				F8FC20590F54AC590036C5E9 /* strip.tcl in Resources */,
 				611A0BD00A407E7000292A8D /* green.gif in Resources */,
 				611A0BD50A407F9000292A8D /* red.gif in Resources */,
 				6161B5310A414C290004C1C8 /* empty.m4a in Resources */,
