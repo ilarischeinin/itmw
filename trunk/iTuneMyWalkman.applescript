@@ -1081,7 +1081,7 @@ on copynext()
 							end tell
 							tell application "Finder" to set thesize to size of encodedfile
 							try
-								shellcmd("/bin/cp -X " & (quoted form of POSIX path of encodedfile) & " " & quoted form of item pos of targetlist)
+								shellcmd("target=" & quoted form of item pos of targetlist & "; /bin/mkdir -p \"${target%/*}\"; /bin/cp -X " & (quoted form of POSIX path of encodedfile) & " \"$target\"")
 								set copied to copied + 1
 								if thesize ≠ missing value then set copiedsize to copiedsize + thesize
 								if myinccopy > 0 then
