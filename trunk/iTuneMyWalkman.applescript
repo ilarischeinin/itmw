@@ -648,7 +648,7 @@ on getsongs()
 					end repeat
 					if writem3uplaylists then
 						tell me
-							set m3u to m3u as string
+							set m3u to "#EXTM3U" & return & (ASCII character 10) & m3u as string -- adding the #EXTM3U header
 							set m3u to convertText(m3u, m3uencoding)
 							set fp to open for access (POSIX file (musicpath & playlistfolder & "/" & playlistname & ".m3u")) with write permission
 							set eof fp to 0
@@ -670,7 +670,7 @@ on getsongs()
 		tell application "iTunes"
 			set plists to a reference to (every playlist whose special kind = Audiobooks)
 			repeat with plist in plists
-				set m3u to {}
+				set m3u to {"#EXTM3U" & return & (ASCII character 10)}
 				try
 					if fixedaudiobookfolder then
 						set playlistname to audiobookfolder
@@ -762,7 +762,7 @@ on getsongs()
 					end repeat
 					if writem3uplaylists then
 						tell me
-							set m3u to m3u as string
+							set m3u to "#EXTM3U" & return & (ASCII character 10) & m3u as string -- adding the #EXTM3U header
 							set m3u to convertText(m3u, m3uencoding)
 							set fp to open for access (POSIX file (musicpath & playlistfolder & "/" & playlistname & ".m3u")) with write permission
 							set eof fp to 0
@@ -906,12 +906,12 @@ on getsongs()
 						end repeat
 						if writem3uplaylists then
 							tell me
+								if debugging then tell me to log "adding to Music.m3u"
+								copy m3u to end of musicm3u
 								if debugging then tell me to log "Writing " & POSIX file (musicpath & playlistfolder & "/" & playlistname & ".m3u")
-								set m3u to m3u as string
+								set m3u to "#EXTM3U" & return & (ASCII character 10) & m3u as string -- adding the #EXTM3U header
 								if debugging then tell me to log "converted to string"
 								set m3u to convertText(m3u, m3uencoding)
-								if debugging then tell me to log "adding to music.m3u"
-								copy m3u to end of musicm3u
 								if debugging then tell me to log "open"
 								set fp to open for access (POSIX file (musicpath & playlistfolder & "/" & playlistname & ".m3u")) with write permission
 								set eof fp to 0
@@ -933,6 +933,8 @@ on getsongs()
 			if writem3uplaylists then
 				tell me
 					if debugging then tell me to log "Writing Music.3mu"
+					set musicm3u to "#EXTM3U" & return & (ASCII character 10) & musicm3u as string -- adding the #EXTM3U header
+					set musicm3u to convertText(musicm3u, m3uencoding)
 					set fp to open for access (POSIX file (musicpath & playlistfolder & "/Music.m3u")) with write permission
 					set eof fp to 0
 					if debugging then tell me to log "write"
@@ -1203,7 +1205,7 @@ on convertText(theText, encoding)
 	if encoding = 1 or theText = "" then
 		return theText
 	else if encoding = 2 then
-		return tcl("encoding.tcl", {"iso88959-1", theText})
+		return tcl("encoding.tcl", {"iso8859-1", theText})
 	end if
 end convertText
 
