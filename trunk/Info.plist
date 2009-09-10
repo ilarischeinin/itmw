@@ -27,6 +27,8 @@
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>SUFeedURL</key>
-	<string>http://ilari.scheinin.fidisk.fi/itunemywalkman/appcast.xml</string>
+	<string>https://www.fidisk.fi/u/ilarisch/itunemywalkman/appcast.xml</string>
+	<key>SUPublicDSAKeyFile</key>
+	<string>dsa_pub.pem</string>
 </dict>
 </plist>
